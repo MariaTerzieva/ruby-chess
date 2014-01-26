@@ -61,4 +61,8 @@ class ChessBoard
   def out_of_the_board?(from, to)
     [from, to].flatten.any? { |coordinate| coordinate < 0 or coordinate > 7 }
   end
+
+  def color_of_player_on(position)
+    @board[position].color
+  end
 end
