@@ -31,7 +31,6 @@ class Rook < Pawn
 end
 
 class ChessBoard
-  EMPTY = nil.freeze
   WHITE = "white".freeze
   BLACK = "black".freeze
   GAME_IN_PROGRESS = "Game in progress.".freeze
@@ -64,5 +63,9 @@ class ChessBoard
 
   def color_of_player_on(position)
     @board[position].color
+  end
+
+  def empty?(position)
+    @board[position].nil?
   end
 end
