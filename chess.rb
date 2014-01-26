@@ -57,4 +57,8 @@ class ChessBoard
     @turn = WHITE
     @game_status = GAME_IN_PROGRESS
   end
+
+  def out_of_the_board?(from, to)
+    [from, to].flatten.any? { |coordinate| coordinate < 0 or coordinate > 7 }
+  end
 end
