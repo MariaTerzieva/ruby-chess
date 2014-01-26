@@ -1,9 +1,18 @@
 class Piece
   attr_reader :color
 
-  def initialize(color)
+  def initialize(color, board)
     @color = color
+    @board = board
   end
+
+  def obstructions?(dx, dy, steps, position)
+    (1...steps).each do |step|
+      x = position[0] + step * dx
+      y = position[1] + step * dy
+      return true unless @board.empty([x, y])
+    end
+    false
 end
 
 class Queen < Piece
@@ -40,18 +49,18 @@ class ChessBoard
 
   def initialize
     @board = {
-      [0, 0] => Rook.new(BLACK), [1, 0] => Knight.new(BLACK),
-      [2, 0] => Bishop.new(BLACK), [3, 0] => Queen.new(BLACK),
-      [4, 0] => King.new(BLACK), [5, 0] => Bishop.new(BLACK),
-      [6, 0] => Knight.new(BLACK), [7, 0] => Rook.new(BLACK),
-      [0, 7] => Rook.new(WHITE), [1, 7] => Knight.new(WHITE),
-      [2, 7] => Bishop.new(WHITE), [3, 7] => Queen.new(WHITE),
-      [4, 7] => King.new(WHITE), [5, 7] => Bishop.new(WHITE),
-      [6, 7] => Knight.new(WHITE), [7, 7] => Rook.new(WHITE),
+      [0, 0] => Rook.new(BLACK, self), [1, 0] => Knight.new(BLACK, self),
+      [2, 0] => Bishop.new(BLACK, self), [3, 0] => Queen.new(BLACK, self),
+      [4, 0] => King.new(BLACK, self), [5, 0] => Bishop.new(BLACK, self),
+      [6, 0] => Knight.new(BLACK, self), [7, 0] => Rook.new(BLACK, self),
+      [0, 7] => Rook.new(WHITE, self), [1, 7] => Knight.new(WHITE, self),
+      [2, 7] => Bishop.new(WHITE, self), [3, 7] => Queen.new(WHITE, self),
+      [4, 7] => King.new(WHITE, self), [5, 7] => Bishop.new(WHITE, self),
+      [6, 7] => Knight.new(WHITE, self), [7, 7] => Rook.new(WHITE, self),
     }
     0.upto(7).each do |column|
-      @board[column, 1] = Pawn.new(BLACK)
-      @board[column, 6] = Pawn.new(WHITE)
+      @board[column, 1] = Pawn.new(BLACK, self)
+      @board[column, 6] = Pawn.new(WHITE, self)
     end
     @turn = WHITE
     @game_status = GAME_IN_PROGRESS
