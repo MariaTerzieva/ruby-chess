@@ -70,11 +70,16 @@ class ChessBoard
     [from, to].flatten.any? { |coordinate| coordinate < 0 or coordinate > 7 }
   end
 
-  def color_of_player_on(position)
+  def color_of_piece_on(position)
     @board[position].color
   end
 
   def empty?(position)
     @board[position].nil?
+  end
+
+  def pieces_of_the_same_color?(from, to)
+    return false if empty?(to)
+    color_of_piece_on(from) == color_of_piece_on(to)
   end
 end
