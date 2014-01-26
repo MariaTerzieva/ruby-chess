@@ -40,9 +40,21 @@ class ChessBoard
   STALEMATE = "Stalemate!".freeze
 
   def initialize
-    @board = {}
+    @board = {
+      [0, 0] => Rook.new(BLACK), [1, 0] => Knight.new(BLACK),
+      [2, 0] => Bishop.new(BLACK), [3, 0] => Queen.new(BLACK),
+      [4, 0] => King.new(BLACK), [5, 0] => Bishop.new(BLACK),
+      [6, 0] => Knight.new(BLACK), [7, 0] => Rook.new(BLACK),
+      [0, 7] => Rook.new(WHITE), [1, 7] => Knight.new(WHITE),
+      [2, 7] => Bishop.new(WHITE), [3, 7] => Queen.new(WHITE),
+      [4, 7] => King.new(WHITE), [5, 7] => Bishop.new(WHITE),
+      [6, 7] => Knight.new(WHITE), [7, 7] => Rook.new(WHITE),
+    }
+    0.upto(7).each do |column|
+      @board[column, 1] = Pawn.new(BLACK)
+      @board[column, 6] = Pawn.new(WHITE)
+    end
     @turn = WHITE
     @game_status = GAME_IN_PROGRESS
   end
 end
-
