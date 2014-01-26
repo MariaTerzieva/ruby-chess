@@ -1,4 +1,7 @@
 class Piece
+  WHITE = "white".freeze
+  BLACK = "black".freeze
+
   attr_reader :color
 
   def initialize(color, board)
@@ -13,6 +16,7 @@ class Piece
       return true unless @board.empty([x, y])
     end
     false
+  end
 end
 
 class Queen < Piece
@@ -31,12 +35,32 @@ class Pawn < Piece
     super
     @moved = false
   end
+
+  def valid_direction?(from, to)
+    if board.color_of_piece_on(from) == WHITE
+      to[1] < from[1]
+    else
+      to[1] > from[1]
+    end
+  end
 end
 
-class King < Pawn
+class King < Piece
+  attr_reader :moved
+
+  def initialize(color)
+    super
+    @moved = false
+  end
 end
 
-class Rook < Pawn
+class Rook < Piece
+  attr_reader :moved
+
+  def initialize(color)
+    super
+    @moved = false
+  end
 end
 
 class ChessBoard
