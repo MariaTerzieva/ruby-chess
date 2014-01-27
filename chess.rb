@@ -17,23 +17,6 @@ class Piece
     end
     false
   end
-
-  def valid_moves(from, in_directions)
-    result = []
-    in_directions.each do |dx, dy|
-      x, y = from
-
-      while true
-        x += dx
-        y += dy
-        break if [x, y].any? { |coordinate| coordinate < 0 or coordinate > 7 }
-        result << [x, y] if @board.empty([x, y])
-        result << [x, y] if @board.color_of_piece_on(from) != @board.color_of_piece_on([x, y])
-        break
-      end
-    end
-    result
-  end
 end
 
 class Queen < Piece
@@ -68,6 +51,9 @@ class King < Piece
   def initialize(color)
     super
     @moved = false
+  end
+
+  def valid_moves(from)
   end
 
   def safe_from(position)
