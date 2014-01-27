@@ -120,6 +120,10 @@ class ChessBoard
     @board[position].color
   end
 
+  def rooks_of(color)
+    @board.select { |_, piece| piece.is_a? Rook and piece.color == color }
+  end
+
   def empty?(position)
     @board[position].nil?
   end
