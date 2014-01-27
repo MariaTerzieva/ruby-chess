@@ -26,15 +26,10 @@ class Piece
       while true
         x += dx
         y += dy
-        if [x, y].any? { |coordinate| coordinate < 0 or coordinate > 7 }
-          break
-        elsif @board.empty([x, y])
-          result << [x, y]
-        elsif @board.color_of_piece_on(from) != @board.color_of_piece_on([x, y])
-          result << [x, y]
-        else
-          break
-        end
+        break if [x, y].any? { |coordinate| coordinate < 0 or coordinate > 7 }
+        result << [x, y] if @board.empty([x, y])
+        result << [x, y] if @board.color_of_piece_on(from) != @board.color_of_piece_on([x, y])
+        break
       end
     end
     result
