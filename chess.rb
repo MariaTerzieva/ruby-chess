@@ -37,7 +37,7 @@ class Pawn < Piece
   end
 
   def valid_direction?(from, to)
-    if board.color_of_piece_on(from) == WHITE
+    if @board.color_of_piece_on(from) == WHITE
       to[1] < from[1]
     else
       to[1] > from[1]
@@ -53,7 +53,19 @@ class King < Piece
     @moved = false
   end
 
-  def valid_moves(from)
+  def castle?(rook)
+    return false if moved or rook.values[0].moved
+    kx, ky = *@board.king_of(color).keys[0]
+    args = rook.keys[0][0] > 4 ? [1, 0, 3] : [-1, 0, 4]
+    return false if obstructions?(*args, [kx, ky])
+    3.times do
+      return false unless king_safe([kx, ky])
+      kx += 1
+    end
+    true
+  end 
+
+  def valid_move(from, to)
   end
 
   def safe_from(position)
@@ -67,7 +79,7 @@ class King < Piece
       positions = [[x + 1, y + 1], [x + 1, y + 1]]
     end
     positions.any? do |position|
-      board.piece_on(position).is_a? Pawn and board.piece_on(position).color != color
+      @board.piece_on(position).is_a? Pawn and @board.piece_on(position).color != color
     end
   end
 
@@ -76,7 +88,7 @@ class King < Piece
                 [x - 2, y - 1], [x + 1, y + 2], [x + 1, y - 2],
                 [x - 1, y + 2], [x - 1, y - 2]]
     positions.any? do |position|
-      board.piece_on(position).is_a? Knight and board.piece_on(position).color != color
+      @board.piece_on(position).is_a? Knight and @board.piece_on(position).color != color
     end
   end
   
