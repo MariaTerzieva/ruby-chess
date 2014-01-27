@@ -17,6 +17,28 @@ class Piece
     end
     false
   end
+
+  def valid_moves(from, in_directions)
+    result = []
+    in_directions.each do |dx, dy|
+      x, y = from
+
+      while true
+        x += dx
+        y += dy
+        if [x, y].any? { |coordinate| coordinate < 0 or coordinate > 7 }
+          break
+        elsif @board.empty([x, y])
+          result << [x, y]
+        elsif @board.color_of_piece_on(from) != @board.color_of_piece_on([x, y])
+          result << [x, y]
+        else
+          break
+        end
+      end
+    end
+    result
+  end
 end
 
 class Queen < Piece
