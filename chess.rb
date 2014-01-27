@@ -74,6 +74,29 @@ class King < Piece
     super
     @moved = false
   end
+
+  def safe_from(position)
+  end
+
+  def threatened_by_a_pawn(x, y)
+    if color == WHITE
+      positions = [[x + 1, y - 1], [x - 1, y - 1]]
+    else
+      positions = [[x + 1, y + 1], [x + 1, y + 1]]
+    end
+    positions.any? do |position|
+      board.piece_on(position).is_a? Pawn and board.piece_on(position).color != color
+    end
+  end
+
+  def threatened_by_a_knight(x, y)
+    positions = [[x + 2, y + 1], [x + 2, y - 1], [x - 2, y + 1],
+                [x - 2, y - 1], [x + 1, y + 2], [x + 1, y - 2],
+                [x - 1, y + 2], [x - 1, y - 2]]
+    positions.any? do |position|
+      board.piece_on(position).is_a? Knight and board.piece_on(position).color != color
+    end
+  end
 end
 
 class Rook < Piece
@@ -130,6 +153,10 @@ class ChessBoard
 
   def empty?(position)
     @board[position].nil?
+  end
+
+  def piece_on(position)
+    @board[position]
   end
 
   def pieces_of_the_same_color?(from, to)
