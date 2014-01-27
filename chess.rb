@@ -76,9 +76,10 @@ class King < Piece
   end
 
   def safe_from(position)
+    not (attacked_by_a_pawn(*position) or attacked_by_a_knight(*position) or attacked_by_other(position))
   end
 
-  def threatened_by_a_pawn(x, y)
+  def attacked_by_a_pawn(x, y)
     if color == WHITE
       positions = [[x + 1, y - 1], [x - 1, y - 1]]
     else
@@ -89,7 +90,7 @@ class King < Piece
     end
   end
 
-  def threatened_by_a_knight(x, y)
+  def attacked_by_a_knight(x, y)
     positions = [[x + 2, y + 1], [x + 2, y - 1], [x - 2, y + 1],
                 [x - 2, y - 1], [x + 1, y + 2], [x + 1, y - 2],
                 [x - 1, y + 2], [x - 1, y - 2]]
@@ -98,7 +99,7 @@ class King < Piece
     end
   end
   
-  def threatened_by_other(position)
+  def attacked_by_other(position)
     directions = [[1, 0], [-1, 0], [0, 1], [0, -1],
                   [1, 1], [-1, 1], [1, -1], [-1, -1]]
     directions.each do |dx, dy|
