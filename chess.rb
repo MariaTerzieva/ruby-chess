@@ -97,6 +97,28 @@ class King < Piece
       board.piece_on(position).is_a? Knight and board.piece_on(position).color != color
     end
   end
+  
+  def threatened_by_other(position)
+    directions = [[1, 0], [-1, 0], [0, 1], [0, -1],
+                  [1, 1], [-1, 1], [1, -1], [-1, -1]]
+    directions.each do |dx, dy|
+      x, y, steps = *position, 0
+      while true
+        x, y, steps = x + dx, y + dy, steps + 1
+        break if [x, y].any? { |coordinate| coordinate < 0 or coordinate > 7 }
+        next if @board.empty([x, y])
+        break if @board.color_of_piece_on([x, y]) == color
+        case @board.piece_on([x, y])
+          when King  then return true if steps == 1
+          when Queen then return true
+          when Rook then return true if dx.abs != dy.abs
+          when Bishop then return true if dx.abs == dy.abs
+        end
+        break
+      end
+    end
+    false
+  end
 end
 
 class Rook < Piece
