@@ -53,19 +53,27 @@ class King < Piece
     @moved = false
   end
 
-  def castle?(rook)
-    return false if moved or rook.values[0].moved
-    kx, ky = *@board.king_of(color).keys[0]
-    args = rook.keys[0][0] > 4 ? [1, 0, 3] : [-1, 0, 4]
-    return false if obstructions?(*args, [kx, ky])
+  def castle?(king_position, rook_position)
+    return false if moved or not piece_on(rook_position).is_a? Rook
+    return false if piece_on(rook_position).moved
+    kx, ky = *king_position
+    args = rook_position[0] > king_position[0] ? [1, 0, 3] : [-1, 0, 4]
+    return false if obstructions?(*args, king_position)
     3.times do
       return false unless king_safe([kx, ky])
-      kx += 1
+      kx += args[0]
     end
     true
   end 
 
   def valid_move(from, to)
+    return false if (from[1] - to[1]).abs > 1
+    if (from[0] - to[0]).abs > 1
+      return castle?(from, [7, from[1]]) if to[0] == from[0] + 2 and from[1] == to[1]
+      return castle?(from, [0, from[1]]) if to[0] == from[0] - 2 and from[1] == to[1]
+      false
+    end
+    @board.king_remains_safe_after_move(from, to)
   end
 
   def safe_from(position)
@@ -151,16 +159,28 @@ class ChessBoard
     @game_status = GAME_IN_PROGRESS
   end
 
+  def move(from, to)
+    @board[to] = @board[from]
+    @board.delete from
+  end
+
+  def king_remains_safe_after_move(from, to)
+    from_before_move = piece_on(from)
+    to_before_move = piece_on(to)
+    move(from, to)
+    king_position, king = king_of(@turn).to_a.flatten
+    result = king.safe_from(king_position)
+    @board[from] = from_before_move
+    @board[to] = to_before_move
+    result
+  end
+
   def out_of_the_board?(from, to)
     [from, to].flatten.any? { |coordinate| coordinate < 0 or coordinate > 7 }
   end
 
   def color_of_piece_on(position)
     @board[position].color
-  end
-
-  def rooks_of(color)
-    @board.select { |_, piece| piece.is_a? Rook and piece.color == color }
   end
 
   def king_of(color)
