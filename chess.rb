@@ -124,6 +124,10 @@ class ChessBoard
     @board.select { |_, piece| piece.is_a? Rook and piece.color == color }
   end
 
+  def king_of(color)
+    @board.select { |_, piece| piece.is_a? King and piece.color == color }
+  end
+
   def empty?(position)
     @board[position].nil?
   end
