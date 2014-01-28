@@ -53,6 +53,19 @@ class Pawn < Piece
     @moved = false
   end
 
+  def valid_move(from, to)
+    return false unless valid_direction?(from, to)
+    if (to[1] - from[1]).abs == 1
+      return false if from[0] == to[0] and not @board.empty?[to]
+      return false if (from[0] - to[0]).abs == 1 and @board.empty?[to]
+    elsif (to[1] - from[1]).abs == 2
+      return false if moved or from[0] != to[0] or obstructions?(0, to[0] <=> from[0], 3, from)
+    else
+      return false
+    end
+    @board.king_remains_safe_after_move(from, to)
+  end
+
   def valid_direction?(from, to)
     if @board.color_of_piece_on(from) == WHITE
       to[1] < from[1]
