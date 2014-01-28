@@ -20,6 +20,9 @@ class Piece
 end
 
 class Queen < Piece
+  def valid_move(from, to)
+    Rook.new(@color, @board).valid_move(from, to) or Bishop.new(@color, @board).valid_move(from, to)
+  end
 end
 
 class Bishop < Piece
@@ -39,7 +42,7 @@ end
 class Pawn < Piece
   attr_reader :moved
 
-  def initialize(color)
+  def initialize(color, board)
     super
     @moved = false
   end
@@ -56,7 +59,7 @@ end
 class King < Piece
   attr_reader :moved
 
-  def initialize(color)
+  def initialize(color, board)
     super
     @moved = false
   end
@@ -134,7 +137,7 @@ end
 class Rook < Piece
   attr_reader :moved
 
-  def initialize(color)
+  def initialize(color, board)
     super
     @moved = false
   end
