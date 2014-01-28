@@ -17,31 +17,78 @@ class Piece
     end
     false
   end
+
+  def same_color_as_piece_on(position)
+    not @board.empty?(position) and @board.color_of_piece_on(position) == color
+  end
+
+  def any_moves?(from, in_directions, max_steps=8)
+    directions.each do |dx, dy|
+      x, y, steps = *from, 0
+      while true
+        x, y, steps = x + dx, y + dy, steps + 1
+        break if [x, y].any? { |coordinate| coordinate < 0 or coordinate > 7 }
+        if @board.empty([x, y]) and @board.king_remains_safe_after_move?(from, [x, y])
+          return true
+        if @board.color_of_piece_on([x, y]) != color
+          return true if @board.king_remains_safe_after_move?(from, [x, y])
+        else
+          break
+        end
+        break if steps == max_steps
+      end
+    end
+    false
+  end
 end
 
 class Queen < Piece
-  def valid_move(from, to)
-    Rook.new(@color, @board).valid_move(from, to) or Bishop.new(@color, @board).valid_move(from, to)
+  def valid_move?(from, to)
+    Rook.new(@color, @board).valid_move?(from, to) or Bishop.new(@color, @board).valid_move?(from, to)
+  end
+
+  def any_moves?(from)
+    in_directions = [[1, 0], [-1, 0], [0, 1], [0, -1],
+                    [1, 1], [-1, 1], [1, -1], [-1, -1]]
+    super(from, in_directions)
   end
 end
 
 class Bishop < Piece
-  def valid_move(from, to)
+  def valid_move?(from, to)
+    return false if same_color_as_piece_on(to)
     return false if (from[0] - to[0]).abs != (from[1] - to[1])
     dx = to[0] < from[0] ? 1 : -1
     dy = to[1] < from[1] ? 1 : -1
     steps = (from[0] - to[0]).abs
     return false if obstructions?(dx, dy, steps, from)
-    @board.king_remains_safe_after_move(from, to)
+    @board.king_remains_safe_after_move?(from, to)
+  end
+
+  def any_moves?(from)
+    in_directions = [[1, 1], [-1, 1], [1, -1], [-1, -1]]
+    super(from, in_directions)
   end
 end
 
 class Knight < Piece
-  def valid_move(from, to)
+  def valid_move?(from, to)
+    return false if same_color_as_piece_on(to)
     horizontal = (from[0] - to[0]).abs == 2 and (from[1] - to[1]).abs == 1
     vertical =(from[0] - to[0]).abs == 1 and (from[1] - to[1]).abs == 2
     return false unless vertical or horizontal
-    @board.king_remains_safe_after_move(from, to)
+    @board.king_remains_safe_after_move?(from, to)
+  end
+
+  def any_moves?(x, y)
+    positions = [[x + 1, y + 2], [x + 2, y + 1],
+                 [x + 2, y - 1], [x + 1, y - 2],
+                 [x - 1, y + 2], [x - 2, y + 1],
+                 [x - 1, y - 2], [x - 2, y - 1]]
+    positions.each do |position|
+      next unless position.all? { |coordinate| coordinate.between?(0, 7) }
+      return true if valid_move?([x, y], position)
+    end
   end
 end
 
@@ -53,7 +100,8 @@ class Pawn < Piece
     @moved = false
   end
 
-  def valid_move(from, to)
+  def valid_move?(from, to)
+    return false if same_color_as_piece_on(to)
     return false unless valid_direction?(from, to)
     if (to[1] - from[1]).abs == 1
       return false if from[0] == to[0] and not @board.empty?[to]
@@ -63,7 +111,7 @@ class Pawn < Piece
     else
       return false
     end
-    @board.king_remains_safe_after_move(from, to)
+    @board.king_remains_safe_after_move?(from, to)
   end
 
   def valid_direction?(from, to)
@@ -71,6 +119,15 @@ class Pawn < Piece
       to[1] < from[1]
     else
       to[1] > from[1]
+    end
+  end
+
+  def any_moves?(x, y)
+      positions = [[x, y - 1], [x + 1, y - 1], [x - 1, y - 1],
+                   [x, y + 1], [x + 1, y + 1], [x - 1, y + 1]]
+    positions.each do |position|
+      next unless position.all? { |coordinate| coordinate.between?(0, 7) }
+      return true if valid_move?([x, y], position)
     end
   end
 end
@@ -90,27 +147,28 @@ class King < Piece
     args = rook_position[0] > king_position[0] ? [1, 0, 3] : [-1, 0, 4]
     return false if obstructions?(*args, king_position)
     3.times do
-      return false unless king_safe([kx, ky])
+      return false unless king_safe?([kx, ky])
       kx += args[0]
     end
     true
   end 
 
-  def valid_move(from, to)
+  def valid_move?(from, to)
+    return false if same_color_as_piece_on(to)
     return false if (from[1] - to[1]).abs > 1
     if (from[0] - to[0]).abs > 1
       return castle?(from, [7, from[1]]) if to[0] == from[0] + 2 and from[1] == to[1]
       return castle?(from, [0, from[1]]) if to[0] == from[0] - 2 and from[1] == to[1]
       false
     end
-    @board.king_remains_safe_after_move(from, to)
+    @board.king_remains_safe_after_move?(from, to)
   end
 
-  def safe_from(position)
-    not (attacked_by_a_pawn(*position) or attacked_by_a_knight(*position) or attacked_by_other(position))
+  def safe_from?(position)
+    not (attacked_by_a_pawn?(*position) or attacked_by_a_knight?(*position) or attacked_by_other?(position))
   end
 
-  def attacked_by_a_pawn(x, y)
+  def attacked_by_a_pawn?(x, y)
     if color == WHITE
       positions = [[x + 1, y - 1], [x - 1, y - 1]]
     else
@@ -121,7 +179,7 @@ class King < Piece
     end
   end
 
-  def attacked_by_a_knight(x, y)
+  def attacked_by_a_knight?(x, y)
     positions = [[x + 2, y + 1], [x + 2, y - 1], [x - 2, y + 1],
                 [x - 2, y - 1], [x + 1, y + 2], [x + 1, y - 2],
                 [x - 1, y + 2], [x - 1, y - 2]]
@@ -130,7 +188,7 @@ class King < Piece
     end
   end
   
-  def attacked_by_other(position)
+  def attacked_by_other?(position)
     directions = [[1, 0], [-1, 0], [0, 1], [0, -1],
                   [1, 1], [-1, 1], [1, -1], [-1, -1]]
     directions.each do |dx, dy|
@@ -151,6 +209,13 @@ class King < Piece
     end
     false
   end
+
+  def any_moves?(from)
+    in_directions = [[1, 0], [-1, 0], [0, 1], [0, -1],
+                    [1, 1], [-1, 1], [1, -1], [-1, -1]]
+    return true if super(from, in_directions)
+    castle?(from, [from[0] + 3, from[1]]) or castle?(from, [from[0] - 4, from[1]])
+  end
 end
 
 class Rook < Piece
@@ -161,13 +226,19 @@ class Rook < Piece
     @moved = false
   end
 
-  def valid_move(from, to)
+  def valid_move?(from, to)
+    return false if same_color_as_piece_on(to)
     return false if from[0] != to[0] and from[1] != to[1]
     dx = to[0] <=> from[0]
     dy = to[1] <=> to[1]
     steps = [(from[0] - to[0]).abs, (from[1] - to[1]).abs].max
     return false if obstructions?(dx, dy, steps, from)
-    @board.king_remains_safe_after_move(from, to)
+    @board.king_remains_safe_after_move?(from, to)
+  end
+
+  def any_moves?(from)
+    in_directions = [[1, 0], [-1, 0], [0, 1], [0, -1]]
+    super(from, in_directions)
   end
 end
 
@@ -203,12 +274,12 @@ class ChessBoard
     @board.delete from
   end
 
-  def king_remains_safe_after_move(from, to)
+  def king_remains_safe_after_move?(from, to)
     from_before_move = piece_on(from)
     to_before_move = piece_on(to)
     move(from, to)
     king_position, king = king_of(@turn).to_a.flatten
-    result = king.safe_from(king_position)
+    result = king.safe_from?(king_position)
     @board[from] = from_before_move
     @board[to] = to_before_move
     result
