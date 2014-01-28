@@ -138,6 +138,15 @@ class Rook < Piece
     super
     @moved = false
   end
+
+  def valid_move(from, to)
+    return false if from[0] != to[0] and from[1] != to[1]
+    dx = to[0] <=> from[0]
+    dy = to[1] <=> to[1]
+    steps = [(from[0] - to[0]).abs, (from[1] - to[1]).abs].max
+    return false if obstructions?(dx, dy, steps, from)
+    @board.king_remains_safe_after_move(from, to)
+  end
 end
 
 class ChessBoard
