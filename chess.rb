@@ -23,6 +23,14 @@ class Queen < Piece
 end
 
 class Bishop < Piece
+  def valid_move(from, to)
+    return false if (from[0] - to[0]).abs != (from[1] - to[1])
+    dx = to[0] < from[0] ? 1 : -1
+    dy = to[1] < from[1] ? 1 : -1
+    steps = (from[0] - to[0]).abs
+    return false if obstructions?(dx, dy, steps, from)
+    @board.king_remains_safe_after_move(from, to)
+  end
 end
 
 class Knight < Piece
