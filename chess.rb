@@ -37,6 +37,12 @@ class Bishop < Piece
 end
 
 class Knight < Piece
+  def valid_move(from, to)
+    horizontal = (from[0] - to[0]).abs == 2 and (from[1] - to[1]).abs == 1
+    vertical =(from[0] - to[0]).abs == 1 and (from[1] - to[1]).abs == 2
+    return false unless vertical or horizontal
+    @board.king_remains_safe_after_move(from, to)
+  end
 end
 
 class Pawn < Piece
