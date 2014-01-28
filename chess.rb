@@ -309,4 +309,11 @@ class ChessBoard
     return false if empty?(to)
     color_of_piece_on(from) == color_of_piece_on(to)
   end
+
+  def any_valid_moves_for_player_on_turn
+    @board.each do |from, piece|
+      return true if piece.color == @turn and piece.any_moves?(from)
+    end
+    false
+  end
 end
