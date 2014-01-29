@@ -68,6 +68,13 @@ class Piece
 end
 
 class Queen < Piece
+  attr_reader :symbol
+
+  def initialize(color, board)
+    super
+    @symbol = color == WHITE ? '♕' : '♛'
+  end
+
   def valid_move?(from, to)
     Rook.new(color, @board).valid_move?(from, to) or Bishop.new(color, @board).valid_move?(from, to)
   end
@@ -80,6 +87,13 @@ class Queen < Piece
 end
 
 class Bishop < Piece
+  attr_reader :symbol
+
+  def initialize(color, board)
+    super
+    @symbol = color == WHITE ? '♗' : '♝'
+  end
+
   def valid_move?(from, to)
     return false if from.delta_x(to) != from.delta_y(to)
     dx = from.x <=> to.x
@@ -96,6 +110,13 @@ class Bishop < Piece
 end
 
 class Knight < Piece
+  attr_reader :symbol
+
+  def initialize(color, board)
+    super
+    @symbol = color == WHITE ? '♘' : '♞'
+  end
+
   def valid_move?(from, to)
     horizontal = from.delta_x(to) == 2 and from.delta_y(to) == 1
     vertical = from.delta_x(to) == 1 and from.delta_y(to) == 2
@@ -116,11 +137,12 @@ class Knight < Piece
 end
 
 class Pawn < Piece
-  attr_reader :moved
+  attr_reader :moved, :symbol
 
   def initialize(color, board)
     super
     @moved = false
+    @symbol = color == WHITE ? '♙' : '♟'
   end
 
   def valid_move?(from, to)
@@ -163,11 +185,12 @@ class Pawn < Piece
 end
 
 class King < Piece
-  attr_reader :moved
+  attr_reader :moved, :symbol
 
   def initialize(color, board)
     super
     @moved = false
+    @symbol = color == WHITE ? '♔' : '♚'
   end
 
   def castle?(king_position, rook_position)
@@ -269,11 +292,12 @@ class King < Piece
 end
 
 class Rook < Piece
-  attr_reader :moved
+  attr_reader :moved, :symbol
 
   def initialize(color, board)
     super
     @moved = false
+    @symbol = color == WHITE ? '♖' : '♜'
   end
 
   def valid_move?(from, to)
@@ -431,5 +455,15 @@ class ChessBoard
 
   def promotion?
     @pawn_promotion_position
+  end
+
+  def print_board
+    0.upto(7).each do |row|
+      0.upto(7).each do |column|
+        square = Square.new(column, row)
+        print empty?(square) ? ' ' : piece_on(square).symbolu
+      end
+      print "\n"
+    end
   end
 end
