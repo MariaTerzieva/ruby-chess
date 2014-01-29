@@ -321,4 +321,8 @@ class ChessBoard
     king_position, king = king_of(@turn).to_a.flatten(1)
     true unless king.safe_from?(king_position)
   end
+
+  def switch_player
+    @turn == WHITE ? BLACK : WHITE
+  end
 end
