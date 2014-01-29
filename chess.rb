@@ -161,9 +161,13 @@ class King < Piece
     return false if same_color_as_piece_on(to)
     return false if (from[1] - to[1]).abs > 1
     if (from[0] - to[0]).abs > 1
-      return castle?(from, [7, from[1]]) if to[0] == from[0] + 2 and from[1] == to[1]
-      return castle?(from, [0, from[1]]) if to[0] == from[0] - 2 and from[1] == to[1]
-      false
+      if to[0] == from[0] + 2 and from[1] == to[1]
+        return false unless castle?(from, [7, from[1]])
+      elsif to[0] == from[0] - 2 and from[1] == to[1]
+        return false unless castle?(from, [0, from[1]]) 
+      else
+        return false
+      end
     end
     @board.king_remains_safe_after_move?(from, to)
   end
@@ -219,6 +223,9 @@ class King < Piece
                     [1, 1], [-1, 1], [1, -1], [-1, -1]]
     return true if super(from, in_directions)
     castle?(from, [from[0] + 3, from[1]]) or castle?(from, [from[0] - 4, from[1]])
+  end
+
+  def move(from, to)
   end
 end
 
@@ -286,7 +293,7 @@ class ChessBoard
     from_before_move = piece_on(from)
     to_before_move = piece_on(to)
     move(from, to)
-    king_position, king = king_of(@turn).to_a.flatten
+    king_position, king = king_of(@turn).to_a.flatten(1)
     result = king.safe_from?(king_position)
     @board[from] = from_before_move
     @board[to] = to_before_move
