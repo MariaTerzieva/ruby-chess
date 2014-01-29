@@ -226,6 +226,15 @@ class King < Piece
   end
 
   def move(from, to)
+    if valid_move?(from, to)
+      if to[0] == from[0] + 2
+        @board.move([7, to[1]], [5, to[1]])
+      elsif to[0] == from[0] - 2
+        @board.move([0, to[1]], [3, to[1]])
+      end
+      @board.move(from, to)
+      @moved = true
+    end
   end
 end
 
