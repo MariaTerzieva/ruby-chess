@@ -316,4 +316,9 @@ class ChessBoard
     end
     false
   end
+
+  def king_of_current_player_is_in_check
+    king_position, king = king_of(@turn).to_a.flatten(1)
+    true unless king.safe_from?(king_position)
+  end
 end
