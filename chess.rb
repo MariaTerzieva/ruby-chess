@@ -102,6 +102,7 @@ class Pawn < Piece
   def initialize(color, board)
     super
     @moved = false
+    @promotion_position = nil
   end
 
   def valid_move?(from, to)
@@ -132,6 +133,13 @@ class Pawn < Piece
     positions.each do |position|
       next unless position.all? { |coordinate| coordinate.between?(0, 7) }
       return true if valid_move?([x, y], position)
+    end
+  end
+
+  def move(from, to)
+    if super
+      @moved = true
+      @promotion_position = to if to[1] == 0 or to[1] == 7
     end
   end
 end
