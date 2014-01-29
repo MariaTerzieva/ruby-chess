@@ -102,7 +102,6 @@ class Pawn < Piece
   def initialize(color, board)
     super
     @moved = false
-    @promotion_position = nil
   end
 
   def valid_move?(from, to)
@@ -139,7 +138,7 @@ class Pawn < Piece
   def move(from, to)
     if super
       @moved = true
-      @promotion_position = to if to[1] == 0 or to[1] == 7
+      @board.pawn_promotion_position = to if to[1] == 0 or to[1] == 7
     end
   end
 end
@@ -276,6 +275,7 @@ end
 
 class ChessBoard
   attr_reader :game_status
+  attr_writer :pawn_promotion_position
 
   WHITE = "white".freeze
   BLACK = "black".freeze
@@ -301,6 +301,7 @@ class ChessBoard
     end
     @turn = WHITE
     @game_status = GAME_IN_PROGRESS
+    @pawn_promotion_position = nil
   end
 
   def move(from, to)
@@ -344,14 +345,14 @@ class ChessBoard
     color_of_piece_on(from) == color_of_piece_on(to)
   end
 
-  def any_valid_moves_for_player_on_turn
+  def any_valid_moves_for_player_on_turn?
     @board.each do |from, piece|
       return true if piece.color == @turn and piece.any_moves?(from)
     end
     false
   end
 
-  def king_of_current_player_is_in_check
+  def king_of_current_player_is_in_check?
     king_position, king = king_of(@turn).to_a.flatten(1)
     true unless king.safe_from?(king_position)
   end
@@ -360,17 +361,17 @@ class ChessBoard
     @turn == WHITE ? BLACK : WHITE
   end
 
-  def player_owns_piece_on(position)
+  def player_owns_piece_on?(position)
     @turn == color_of_piece_on(position)
   end
 
-  def allowed_to_move_piece_on(from, to)
+  def allowed_to_move_piece_on?(from, to)
     piece_on(from).move(from, to)
   end
 
   def game_over?
-    unless any_valid_moves_for_player_on_turn
-      if king_of_current_player_is_in_check
+    unless any_valid_moves_for_player_on_turn?
+      if king_of_current_player_is_in_check?
         @game_status = @turn == WHITE ? BLACK_WIN : WHITE_WIN
       else
         @game_status = STALEMATE
@@ -382,8 +383,8 @@ class ChessBoard
     return if empty?(from)
     return if out_of_the_board?(from, to)
     return if from == to
-    return unless player_owns_piece_on(from)
-    return unless allowed_to_move_piece_on(from, to)
+    return unless player_owns_piece_on?(from)
+    return unless allowed_to_move_piece_on?(from, to)
     switch_players
     game_over?
   end
@@ -398,5 +399,15 @@ class ChessBoard
 
   def stalemate?
     @game_status == STALEMATE
+  end
+
+  def promote_pawn_to(piece)
+    @board[pawn_promotion_position] = piece
+    @pawn_promotion_position = nil
+    game_over?
+  end
+
+  def promotion?
+    @pawn_promotion_position
   end
 end
