@@ -244,6 +244,10 @@ class Rook < Piece
     in_directions = [[1, 0], [-1, 0], [0, 1], [0, -1]]
     super(from, in_directions)
   end
+
+  def move(from, to)
+    @moved = true if super
+  end
 end
 
 class ChessBoard
