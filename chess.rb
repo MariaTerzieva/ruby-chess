@@ -275,6 +275,8 @@ class Rook < Piece
 end
 
 class ChessBoard
+  attr_reader :game_status
+
   WHITE = "white".freeze
   BLACK = "black".freeze
   GAME_IN_PROGRESS = "Game in progress.".freeze
@@ -384,5 +386,17 @@ class ChessBoard
     return unless allowed_to_move_piece_on(from, to)
     switch_players
     game_over?
+  end
+
+  def white_win?
+    @game_status == WHITE_WIN
+  end
+
+  def black_win?
+    @game_status == BLACK_WIN
+  end
+
+  def stalemate?
+    @game_status == STALEMATE
   end
 end
