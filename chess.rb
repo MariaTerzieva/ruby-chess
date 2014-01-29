@@ -325,4 +325,8 @@ class ChessBoard
   def switch_player
     @turn == WHITE ? BLACK : WHITE
   end
+
+  def player_owns_piece_on(position)
+    @turn == color_of_piece_on(position)
+  end
 end
