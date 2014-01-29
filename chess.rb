@@ -354,11 +354,35 @@ class ChessBoard
     true unless king.safe_from?(king_position)
   end
 
-  def switch_player
+  def switch_players
     @turn == WHITE ? BLACK : WHITE
   end
 
   def player_owns_piece_on(position)
     @turn == color_of_piece_on(position)
+  end
+
+  def allowed_to_move_piece_on(from, to)
+    piece_on(from).move(from, to)
+  end
+
+  def game_over?
+    unless any_valid_moves_for_player_on_turn
+      if king_of_current_player_is_in_check
+        @game_status = @turn == WHITE ? BLACK_WIN : WHITE_WIN
+      else
+        @game_status = STALEMATE
+      end
+    end
+  end
+
+  def make_a_move(from, to)
+    return if empty?(from)
+    return if out_of_the_board?(from, to)
+    return if from == to
+    return unless player_owns_piece_on(from)
+    return unless allowed_to_move_piece_on(from, to)
+    switch_players
+    game_over?
   end
 end
