@@ -43,10 +43,6 @@ class Piece
     @board.move(from, to) if valid_move?(from, to)
   end
 
-  def same_color_as_piece_on(position)
-    not @board.empty?(position) and @board.color_of_piece_on(position) == color
-  end
-
   def any_moves?(from, in_directions, max_steps=8)
     directions.each do |dx, dy|
       to, steps = Square.new(from.x, from.y), 0
@@ -81,7 +77,6 @@ end
 
 class Bishop < Piece
   def valid_move?(from, to)
-    return false if same_color_as_piece_on(to)
     return false if (from.x - to.x).abs != (from.y - to.y)
     dx = from.x <=> to.x
     dy = from.y <=> to.y
@@ -98,7 +93,6 @@ end
 
 class Knight < Piece
   def valid_move?(from, to)
-    return false if same_color_as_piece_on(to)
     horizontal = (from.x - to.x).abs == 2 and (from.y - to.y).abs == 1
     vertical =(from.x - to.x).abs == 1 and (from.y - to.y).abs == 2
     return false unless vertical or horizontal
@@ -126,7 +120,6 @@ class Pawn < Piece
   end
 
   def valid_move?(from, to)
-    return false if same_color_as_piece_on(to)
     return false unless valid_direction?(from, to)
     if (to.y - from.y).abs == 1
       return false if from.x == to.x and not @board.empty?(to)
@@ -183,7 +176,6 @@ class King < Piece
   end 
 
   def valid_move?(from, to)
-    return false if same_color_as_piece_on(to)
     return false if (from.y - to.y).abs > 1
     if (from.x - to.x).abs > 1
       if to.x == from.x + 2 and from.y == to.y
@@ -277,7 +269,6 @@ class Rook < Piece
   end
 
   def valid_move?(from, to)
-    return false if same_color_as_piece_on(to)
     return false if from.x != to.x and from.y != to.y
     dx = to.x <=> from.x
     dy = to.y <=> from.y
@@ -364,8 +355,7 @@ class ChessBoard
   end
 
   def pieces_of_the_same_color?(from, to)
-    return false if empty?(to)
-    color_of_piece_on(from) == color_of_piece_on(to)
+    not empty?(to) and color_of_piece_on(from) == color_of_piece_on(to)
   end
 
   def any_valid_moves_for_player_on_turn?
@@ -405,6 +395,7 @@ class ChessBoard
   def make_a_move(from, to)
     return if empty?(from)
     return if out_of_the_board?(from, to)
+    return if pieces_of_the_same_color?(from, to)
     return if from == to
     return unless player_owns_piece_on?(from)
     return unless allowed_to_move_piece_on?(from, to)
