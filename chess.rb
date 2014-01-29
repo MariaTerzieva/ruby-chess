@@ -49,14 +49,10 @@ class Piece
       while true
         to, steps = Square.new(to.x + dx, to.y + dy), steps.succ
         break if to.out_of_the_board
-        if @board.empty(to) and @board.king_remains_safe_after_move?(from, to)
-          return true
-        if @board.color_of_piece_on(to) != color
+        if @board.empty(to) or @board.color_of_piece_on(to) != color
           return true if @board.king_remains_safe_after_move?(from, to)
-        else
-          break
         end
-        break if steps == max_steps
+        break if @board.color_of_piece_on(to) == color or steps == max_steps
       end
     end
     false
