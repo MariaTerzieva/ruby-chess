@@ -274,7 +274,7 @@ class Rook < Piece
 end
 
 class ChessBoard
-  attr_reader :game_status
+  attr_reader :game_status, :turn
   attr_writer :pawn_promotion_position
 
   WHITE = "white".freeze
