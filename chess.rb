@@ -18,6 +18,10 @@ class Piece
     false
   end
 
+  def move(from, to)
+    @board.move(from, to) if valid_move?(from, to)
+  end
+
   def same_color_as_piece_on(position)
     not @board.empty?(position) and @board.color_of_piece_on(position) == color
   end
