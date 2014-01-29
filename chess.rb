@@ -17,6 +17,14 @@ class Square
   def to_a
     [x, y]
   end
+
+  def delta_x(other)
+    (x - other.x).abs
+  end
+
+  def delta_y(other)
+    (y - other.y).abs
+  end
 end
 
 class Piece
@@ -61,22 +69,22 @@ end
 
 class Queen < Piece
   def valid_move?(from, to)
-    Rook.new(@color, @board).valid_move?(from, to) or Bishop.new(@color, @board).valid_move?(from, to)
+    Rook.new(color, @board).valid_move?(from, to) or Bishop.new(color, @board).valid_move?(from, to)
   end
 
   def any_moves?(from)
     in_directions = [[1, 0], [-1, 0], [0, 1], [0, -1],
-                    [1, 1], [-1, 1], [1, -1], [-1, -1]]
+                     [1, 1], [-1, 1], [1, -1], [-1, -1]]
     super(from, in_directions)
   end
 end
 
 class Bishop < Piece
   def valid_move?(from, to)
-    return false if (from.x - to.x).abs != (from.y - to.y)
+    return false if from.delta_x(to) != from.delta_y(to)
     dx = from.x <=> to.x
     dy = from.y <=> to.y
-    steps = (from.x - to.x).abs
+    steps = from.delta_x(to)
     return false if obstructions?(dx, dy, steps, from)
     @board.king_remains_safe_after_move?(from, to)
   end
@@ -89,8 +97,8 @@ end
 
 class Knight < Piece
   def valid_move?(from, to)
-    horizontal = (from.x - to.x).abs == 2 and (from.y - to.y).abs == 1
-    vertical =(from.x - to.x).abs == 1 and (from.y - to.y).abs == 2
+    horizontal = from.delta_x(to) == 2 and from.delta_y(to) == 1
+    vertical = from.delta_x(to) == 1 and from.delta_y(to) == 2
     return false unless vertical or horizontal
     @board.king_remains_safe_after_move?(from, to)
   end
@@ -117,10 +125,10 @@ class Pawn < Piece
 
   def valid_move?(from, to)
     return false unless valid_direction?(from, to)
-    if (to.y - from.y).abs == 1
+    if from.delta_y(to) == 1
       return false if from.x == to.x and not @board.empty?(to)
-      return false if (from.x - to.x).abs == 1 and @board.empty?(to)
-    elsif (to.y - from.y).abs == 2
+      return false if from.delta_x(to) == 1 and @board.empty?(to)
+    elsif from.delta_y(to) == 2
       return false if moved or from.x != to.x or obstructions?(0, to.x <=> from.x, 3, from)
     else
       return false
@@ -132,13 +140,17 @@ class Pawn < Piece
     @board.color_of_piece_on(from) == WHITE ? to.y < from.y : to.y > from.y
   end
 
+  def empty_or_opponent_on(position)
+    @board.empty?(position) or @board.color_of_piece_on(position) != color
+  end
+
   def any_moves?(from)
     positions = [[from.x + 1, from.y - 1], [from.x, from.y - 1], 
                  [from.x - 1, from.y - 1], [from.x, from.y + 1],
                  [from.x + 1, from.y + 1], [from.x - 1, from.y + 1]]
     positions.each do |position|
       next unless position.all? { |coordinate| coordinate.between?(0, 7) }
-      return true if valid_move?(from, position)
+      return true if empty_or_opponent_on(position) and valid_move?(from, position)
     end
   end
 
@@ -172,8 +184,8 @@ class King < Piece
   end 
 
   def valid_move?(from, to)
-    return false if (from.y - to.y).abs > 1
-    if (from.x - to.x).abs > 1
+    return false if from.delta_y(to) > 1
+    if from.delta_x(to) > 1
       if to.x == from.x + 2 and from.y == to.y
         rook_position = Square.new(7, from.y)
         return false unless castle?(from, rook_position)
@@ -268,7 +280,7 @@ class Rook < Piece
     return false if from.x != to.x and from.y != to.y
     dx = to.x <=> from.x
     dy = to.y <=> from.y
-    steps = [(from.x - to.x).abs, (from.y - to.y).abs].max
+    steps = [from.delta_x(to), from.delta_y(to)].max
     return false if obstructions?(dx, dy, steps, from)
     @board.king_remains_safe_after_move?(from, to)
   end
