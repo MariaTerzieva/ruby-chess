@@ -59,14 +59,14 @@ describe "ChessBoard" do
     board.empty?(from).should be_true
   end
 
-  it "check if king remains safe after move" do
+  it "checks if king remains safe after move" do
     from = make_square(0, 1)
     to = make_square(0, 3)
     board.move(from, to)
     board.king_remains_safe_after_move?(from, to).should be_true
   end
 
-  it "check if coordinates are out of the board" do
+  it "checks if coordinates are out of the board" do
     from = make_square(-1, 1)
     to = make_square(4, 8)
     board.out_of_the_board?(from, to).should be_true
@@ -89,6 +89,13 @@ describe "ChessBoard" do
     x, y, king = board.king_of("black")
     [x, y].should eq [4, 0]
     king.symbol.should eq '♚'
+  end
+
+  it "determines if a positon is empty" do
+    square = make_square(5, 5)
+    board.empty?(square).should be_true
+    black_queen_postion = make_square(3, 0)
+    board.empty?(black_queen_postion).should be_false
   end
 end
 
