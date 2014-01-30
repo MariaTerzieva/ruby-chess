@@ -234,7 +234,8 @@ class King < Piece
       positions = [[from.x + 1, from.y + 1], [from.x + 1, from.y + 1]]
     end
     positions.any? do |position|
-      @board.piece_on(position).is_a? Pawn and @board.piece_on(position).color != color
+      square = Square.new(*position)
+      @board.piece_on(square).is_a? Pawn and @board.piece_on(square).color != color
     end
   end
 
@@ -244,7 +245,8 @@ class King < Piece
                  [from.x + 1, from.y + 2], [from.x + 1, from.y - 2],
                  [from.x - 1, from.y + 2], [from.x - 1, from.y - 2]]
     positions.any? do |position|
-      @board.piece_on(position).is_a? Knight and @board.piece_on(position).color != color
+      square = Square.new(*position)
+      @board.piece_on(square).is_a? Knight and @board.piece_on(square).color != color
     end
   end
   
