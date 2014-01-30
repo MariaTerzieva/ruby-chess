@@ -359,8 +359,8 @@ class ChessBoard
     from_before_move = piece_on(from)
     to_before_move = piece_on(to)
     move(from, to)
-    kx, ky, king = king_of(turn).to_a.flatten
-    king_position = Square.new(kx, ky)
+    x, y, king = king_of(turn)
+    king_position = Square.new(x, y)
     result = king.safe_from?(king_position)
     @board[from.to_a] = from_before_move
     @board[to.to_a] = to_before_move
@@ -376,7 +376,7 @@ class ChessBoard
   end
 
   def king_of(color)
-    @board.select { |_, piece| piece.is_a? King and piece.color == color }
+    @board.select { |_, piece| piece.is_a? King and piece.color == color }.to_a.flatten
   end
 
   def empty?(position)
@@ -399,8 +399,8 @@ class ChessBoard
   end
 
   def king_of_current_player_is_in_check?
-    king_position, king = king_of(turn).to_a.flatten(1)
-    true unless king.safe_from?(Square.new(*king_position))
+    x, y, king = king_of(turn)
+    true unless king.safe_from?(Square.new(x, y))
   end
 
   def switch_players
