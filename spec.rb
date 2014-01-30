@@ -78,6 +78,18 @@ describe "ChessBoard" do
     board.color_of_piece_on(black_pawn_position).should eq "black"
     board.color_of_piece_on(white_queen_position).should eq "white"
   end
+
+  it "gets the white king" do
+    x, y, king = board.king_of("white")
+    [x, y].should eq [4, 7]
+    king.symbol.should eq '♔'
+  end
+
+  it "gets the black king" do
+    x, y, king = board.king_of("black")
+    [x, y].should eq [4, 0]
+    king.symbol.should eq '♚'
+  end
 end
 
 def make_square(*args)
