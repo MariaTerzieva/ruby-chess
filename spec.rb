@@ -72,6 +72,32 @@ describe "Queen" do
   end
 end
 
+describe "Bishop" do
+  let(:board) { make_board }
+
+  it "exposes it's color and symbol via getters" do
+    white_bishop = make_bishop("white", board)
+    black_bishop = make_bishop("black", board)
+    white_bishop.color.should eq "white"
+    white_bishop.symbol.should eq '♗'
+    black_bishop.color.should eq "black"
+    black_bishop.symbol.should eq '♝'
+  end
+
+  it "finds any valid moves" do
+    from = make_square(5, 0)
+    bishop = board.piece_on(from)
+    bishop.any_moves?(from).should be_false
+  end
+
+  it "determines if a move is valid" do
+    from = make_square(5, 0)
+    to = make_square(3, 2)
+    bishop = board.piece_on(from)
+    bishop.valid_move?(from, to).should be_false
+  end
+end
+
 describe "ChessBoard" do
   let(:board) { make_board }
 
@@ -230,6 +256,10 @@ end
 
 def make_queen(*args)
   Queen.new(*args)
+end
+
+def make_bishop(*args)
+  Bishop.new(*args)
 end
 
 def check_rendering_of(board, expected)
