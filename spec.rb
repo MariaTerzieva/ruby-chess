@@ -29,6 +29,23 @@ describe "Square" do
   end
 end
 
+describe "Piece" do
+  let(:board) { make_board }
+
+  it "finds obstructions in a given direction" do
+    square = make_square(3, 6)
+    piece = make_piece("white", board)
+    piece.obstructions?(0, -1, 5, square).should be_false
+  end
+
+  it "exposes it's color via getter" do
+    white_piece = make_piece("white", board)
+    white_piece.color.should eq "white"
+    black_piece = make_piece("black", board)
+    black_piece.color.should eq "black"
+  end
+end
+
 describe "ChessBoard" do
   let(:board) { make_board }
 
@@ -179,6 +196,10 @@ end
 
 def make_board
   ChessBoard.new
+end
+
+def make_piece(*args)
+  Piece.new(*args)
 end
 
 def check_rendering_of(board, expected)
