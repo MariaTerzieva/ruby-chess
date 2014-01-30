@@ -60,8 +60,8 @@ describe "ChessBoard" do
   end
 
   it "checks if king remains safe after move" do
-    from = make_square(0, 1)
-    to = make_square(0, 3)
+    from = make_square(0, 6)
+    to = make_square(0, 4)
     board.move(from, to)
     board.king_remains_safe_after_move?(from, to).should be_true
   end
@@ -134,6 +134,12 @@ describe "ChessBoard" do
     board.player_owns_piece_on?(square1).should be_false
     square2 = make_square(4, 7)
     board.player_owns_piece_on?(square2).should be_true
+  end
+
+  it "determines if the current player is allowed to move a piece on a given position" do
+    from = make_square(1, 7)
+    to = make_square(0, 5)
+    board.allowed_to_move_piece_on?(from, to).should be_true
   end
 end
 
