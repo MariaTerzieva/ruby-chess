@@ -403,7 +403,7 @@ class ChessBoard
   end
 
   def switch_players
-    turn == WHITE ? BLACK : WHITE
+    @turn = turn == WHITE ? BLACK : WHITE
   end
 
   def player_owns_piece_on?(position)
