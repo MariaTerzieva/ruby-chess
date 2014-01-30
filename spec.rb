@@ -27,10 +27,6 @@ describe "Square" do
   it "calculates the distance between the y coordinates of two squares" do
     square1.delta_y(square2).should eq 7
   end
-
-  def make_square(*args)
-    Square.new(*args)
-  end
 end
 
 describe "ChessBoard" do
@@ -55,16 +51,28 @@ describe "ChessBoard" do
     board.turn.should eq "white"
   end
 
-  def make_board
-    ChessBoard.new
+  it "move works" do
+    from = make_square(0, 1)
+    to = make_square(0, 3)
+    board.move(from, to)
+    board.piece_on(to).symbol.should eq '♟'
+    board.empty?(from).should be_true
   end
+end
 
-  def check_rendering_of(board, expected)
-    output = board.print
-    output.should eq rendering(expected)
-  end
+def make_square(*args)
+  Square.new(*args)
+end
 
-  def rendering(text)
-    text.strip.gsub(/^\s+/, '')
-  end
+def make_board
+  ChessBoard.new
+end
+
+def check_rendering_of(board, expected)
+  output = board.print
+  output.should eq rendering(expected)
+end
+
+def rendering(text)
+  text.strip.gsub(/^\s+/, '')
 end
