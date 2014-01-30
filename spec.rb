@@ -65,6 +65,19 @@ describe "ChessBoard" do
     board.move(from, to)
     board.king_remains_safe_after_move?(from, to).should be_true
   end
+
+  it "check if coordinates are out of the board" do
+    from = make_square(-1, 1)
+    to = make_square(4, 8)
+    board.out_of_the_board?(from, to).should be_true
+  end
+
+  it "returns the color of the piece on a given position" do
+    black_pawn_position = make_square(0, 1)
+    white_queen_position = make_square(3, 7)
+    board.color_of_piece_on(black_pawn_position).should eq "black"
+    board.color_of_piece_on(white_queen_position).should eq "white"
+  end
 end
 
 def make_square(*args)
