@@ -34,8 +34,9 @@ describe "Square" do
 end
 
 describe "ChessBoard" do
+  let(:board) { make_board }
+
   it "prints the board correctly" do
-    board = make_board
     check_rendering_of board, '
       ♜♞♝♛♚♝♞♜
       ♟♟♟♟♟♟♟♟
@@ -46,6 +47,12 @@ describe "ChessBoard" do
       ♙♙♙♙♙♙♙♙
       ♖♘♗♕♔♗♘♖
     '
+  end
+
+  it "is properly initialized" do
+    board.game_status.should eq "Game in progress."
+    board.promotion?.should be_false
+    board.turn.should eq "white"
   end
 
   def make_board
