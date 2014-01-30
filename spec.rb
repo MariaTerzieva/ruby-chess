@@ -116,6 +116,10 @@ describe "ChessBoard" do
   it "determines if player on turn has any moves left" do
     board.any_valid_moves_for_player_on_turn?.should be_true
   end
+
+  it "determines if the king of the current player is in check" do
+    board.king_of_current_player_is_in_check?.should be_false
+  end
 end
 
 def make_square(*args)
