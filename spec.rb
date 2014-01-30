@@ -58,6 +58,13 @@ describe "ChessBoard" do
     board.piece_on(to).symbol.should eq '♟'
     board.empty?(from).should be_true
   end
+
+  it "check if king remains safe after move" do
+    from = make_square(0, 1)
+    to = make_square(0, 3)
+    board.move(from, to)
+    board.king_remains_safe_after_move?(from, to).should be_true
+  end
 end
 
 def make_square(*args)
