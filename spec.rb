@@ -128,6 +128,13 @@ describe "ChessBoard" do
     board.switch_players
     board.turn.should eq "white"
   end
+
+  it "determines if the current player owns a piece on a given position" do
+    square1 = make_square(0, 0)
+    board.player_owns_piece_on?(square1).should be_false
+    square2 = make_square(4, 7)
+    board.player_owns_piece_on?(square2).should be_true
+  end
 end
 
 def make_square(*args)
