@@ -120,6 +120,14 @@ describe "ChessBoard" do
   it "determines if the king of the current player is in check" do
     board.king_of_current_player_is_in_check?.should be_false
   end
+
+  it "can switch players" do
+    board.turn.should eq "white"
+    board.switch_players
+    board.turn.should eq "black"
+    board.switch_players
+    board.turn.should eq "white"
+  end
 end
 
 def make_square(*args)
