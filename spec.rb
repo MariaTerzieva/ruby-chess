@@ -97,6 +97,13 @@ describe "ChessBoard" do
     black_queen_postion = make_square(3, 0)
     board.empty?(black_queen_postion).should be_false
   end
+
+  it "returns piece on a given position" do
+    square = make_square(7, 7)
+    board.piece_on(square).symbol.should eq "♖"
+    empty_square = make_square(5, 5)
+    board.piece_on(empty_square).should be_nil
+  end
 end
 
 def make_square(*args)
