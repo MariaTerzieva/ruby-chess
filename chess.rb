@@ -52,12 +52,12 @@ class Piece
   end
 
   def any_moves?(from, in_directions, max_steps=8)
-    directions.each do |dx, dy|
+    in_directions.each do |dx, dy|
       to, steps = Square.new(from.x, from.y), 0
       while true
         to, steps = Square.new(to.x + dx, to.y + dy), steps.succ
         break if to.out_of_the_board
-        if @board.empty(to) or @board.color_of_piece_on(to) != color
+        if @board.empty?(to) or @board.color_of_piece_on(to) != color
           return true if @board.king_remains_safe_after_move?(from, to)
         end
         break if @board.color_of_piece_on(to) == color or steps == max_steps
@@ -131,7 +131,7 @@ class Knight < Piece
                  [from.x - 1, from.y - 2], [from.x - 2, from.y - 1]]
     positions.each do |position|
       next unless position.all? { |coordinate| coordinate.between?(0, 7) }
-      return true if valid_move?(from, position)
+      return true if valid_move?(from, Square.new(*position))
     end
   end
 end
@@ -172,6 +172,7 @@ class Pawn < Piece
                  [from.x + 1, from.y + 1], [from.x - 1, from.y + 1]]
     positions.each do |position|
       next unless position.all? { |coordinate| coordinate.between?(0, 7) }
+      position = Square.new(*position)
       return true if empty_or_opponent_on(position) and valid_move?(from, position)
     end
   end
@@ -356,14 +357,12 @@ class ChessBoard
   end
 
   def king_remains_safe_after_move?(from, to)
-    from_before_move = piece_on(from)
-    to_before_move = piece_on(to)
+    board = @board.dup
     move(from, to)
     x, y, king = king_of(turn)
     king_position = Square.new(x, y)
     result = king.safe_from?(king_position)
-    @board[from.to_a] = from_before_move
-    @board[to.to_a] = to_before_move
+    @board = board
     result
   end
 
