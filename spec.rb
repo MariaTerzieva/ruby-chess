@@ -167,6 +167,10 @@ describe "ChessBoard" do
     board.black_win?.should be_false
     board.stalemate?.should be_false
   end
+
+  it "determines if a pawn should be promoted" do
+    board.promotion?.should be_false
+  end
 end
 
 def make_square(*args)
