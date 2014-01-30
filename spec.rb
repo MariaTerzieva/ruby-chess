@@ -46,6 +46,32 @@ describe "Piece" do
   end
 end
 
+describe "Queen" do
+  let(:board) { make_board }
+
+  it "exposes it's color and symbol via getters" do
+    white_queen = make_queen("white", board)
+    black_queen = make_queen("black", board)
+    white_queen.color.should eq "white"
+    white_queen.symbol.should eq '♕'
+    black_queen.color.should eq "black"
+    black_queen.symbol.should eq '♛'
+  end
+
+  it "finds any valid moves" do
+    from = make_square(3, 7)
+    queen = board.piece_on(from)
+    queen.any_moves?(from).should be_false
+  end
+
+  it "determines if a move is valid" do
+    from = make_square(3, 7)
+    to = make_square(0, 7)
+    queen = board.piece_on(from)
+    queen.valid_move?(from, to).should be_false
+  end
+end
+
 describe "ChessBoard" do
   let(:board) { make_board }
 
@@ -200,6 +226,10 @@ end
 
 def make_piece(*args)
   Piece.new(*args)
+end
+
+def make_queen(*args)
+  Queen.new(*args)
 end
 
 def check_rendering_of(board, expected)
