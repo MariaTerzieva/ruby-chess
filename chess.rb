@@ -42,7 +42,7 @@ class Piece
     (1...steps).each do |step|
       x = position.x + step * dx
       y = position.y + step * dy
-      return true unless @board.empty(Square.new(x, y))
+      return true unless @board.empty?(Square.new(x, y))
     end
     false
   end
@@ -151,7 +151,7 @@ class Pawn < Piece
       return false if from.x == to.x and not @board.empty?(to)
       return false if from.delta_x(to) == 1 and @board.empty?(to)
     elsif from.delta_y(to) == 2
-      return false if moved or from.x != to.x or obstructions?(0, to.x <=> from.x, 3, from)
+      return false if moved or from.x != to.x or obstructions?(0, to.y <=> from.y, 3, from)
     else
       return false
     end
@@ -159,7 +159,7 @@ class Pawn < Piece
   end
 
   def valid_direction?(from, to)
-    @board.color_of_piece_on(from) == WHITE ? to.y < from.y : to.y > from.y
+    color == WHITE ? to.y < from.y : to.y > from.y
   end
 
   def empty_or_opponent_on(position)
@@ -179,8 +179,8 @@ class Pawn < Piece
 
   def move(from, to)
     if super
-      @moved = true
       @board.pawn_promotion_position = to if to.y == 0 or to.y == 7
+      @moved = true
     end
   end
 end
