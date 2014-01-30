@@ -141,6 +141,10 @@ describe "ChessBoard" do
     to = make_square(0, 5)
     board.allowed_to_move_piece_on?(from, to).should be_true
   end
+
+  it "determines if game is over" do
+    board.game_over?.should be_false
+  end
 end
 
 def make_square(*args)
