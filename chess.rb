@@ -151,7 +151,7 @@ class Pawn < Piece
       return false if from.x == to.x and not @board.empty?(to)
       return false if from.delta_x(to) == 1 and @board.empty?(to)
     elsif from.delta_y(to) == 2
-      return false if moved or from.x != to.x or obstructions?(0, to.y <=> from.y, 3, from)
+      return false if moved or from.x != to.x or obstructions?(0, to.y <=> from.y , 3, from)
     else
       return false
     end
@@ -343,8 +343,11 @@ class ChessBoard
       [6, 7] => Knight.new(WHITE, self), [7, 7] => Rook.new(WHITE, self),
     }
     0.upto(7).each do |column|
-      @board[[column, 1]] = Pawn.new(BLACK, self)
-      @board[[column, 6]] = Pawn.new(WHITE, self)
+      2.upto(5).each do |row|
+        @board[[column, 1]] = Pawn.new(BLACK, self)
+        @board[[column, 6]] = Pawn.new(WHITE, self)
+        @board[[column, row]] = nil
+      end
     end
     @turn = WHITE
     @game_status = GAME_IN_PROGRESS
@@ -353,7 +356,8 @@ class ChessBoard
 
   def move(from, to)
     @board[to.to_a] = @board[from.to_a]
-    @board.delete from.to_a
+    @board[from.to_a] = nil
+    true
   end
 
   def king_remains_safe_after_move?(from, to)
