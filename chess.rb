@@ -342,8 +342,8 @@ class ChessBoard
       [6, 7] => Knight.new(WHITE, self), [7, 7] => Rook.new(WHITE, self),
     }
     0.upto(7).each do |column|
-      @board[column, 1] = Pawn.new(BLACK, self)
-      @board[column, 6] = Pawn.new(WHITE, self)
+      @board[[column, 1]] = Pawn.new(BLACK, self)
+      @board[[column, 6]] = Pawn.new(WHITE, self)
     end
     @turn = WHITE
     @game_status = GAME_IN_PROGRESS
@@ -457,13 +457,15 @@ class ChessBoard
     @pawn_promotion_position
   end
 
-  def print_board
+  def print
+    result = ""
     0.upto(7).each do |row|
       0.upto(7).each do |column|
         square = Square.new(column, row)
-        print empty?(square) ? ' ' : piece_on(square).symbolu
+        result << (empty?(square) ? '-' : piece_on(square).symbol)
       end
-      print "\n"
+      result << "\n"
     end
+    result.chomp
   end
 end
