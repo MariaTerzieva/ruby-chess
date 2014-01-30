@@ -255,7 +255,7 @@ class King < Piece
       while true
         to, steps = Square.new(to.x + dx, to.y + dy), steps.succ
         break if to.out_of_the_board
-        next if @board.empty(to)
+        next if @board.empty?(to)
         break if @board.color_of_piece_on(to) == color
         case @board.piece_on(to)
           when King  then return true if steps == 1
@@ -359,7 +359,8 @@ class ChessBoard
     from_before_move = piece_on(from)
     to_before_move = piece_on(to)
     move(from, to)
-    king_position, king = king_of(turn).to_a.flatten(1)
+    kx, ky, king = king_of(turn).to_a.flatten
+    king_position = Square.new(kx, ky)
     result = king.safe_from?(king_position)
     @board[from.to_a] = from_before_move
     @board[to.to_a] = to_before_move
