@@ -96,8 +96,8 @@ class Bishop < Piece
 
   def valid_move?(from, to)
     return false if from.delta_x(to) != from.delta_y(to)
-    dx = from.x <=> to.x
-    dy = from.y <=> to.y
+    dx = to.x <=> from.x
+    dy = to.y <=> from.y
     steps = from.delta_x(to)
     return false if obstructions?(dx, dy, steps, from)
     @board.king_remains_safe_after_move?(from, to)
