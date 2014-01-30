@@ -161,6 +161,12 @@ describe "ChessBoard" do
       ♖♘♗♕♔♗♘♖
     '
   end
+
+  it "gets game status as expected" do
+    board.white_win?.should be_false
+    board.black_win?.should be_false
+    board.stalemate?.should be_false
+  end
 end
 
 def make_square(*args)
