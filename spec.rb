@@ -145,6 +145,22 @@ describe "ChessBoard" do
   it "determines if game is over" do
     board.game_over?.should be_false
   end
+
+  it "players can move as expected" do
+    from = make_square(4, 6)
+    to = make_square(4, 5)
+    board.make_a_move(from, to)
+    check_rendering_of board, '
+      ♜♞♝♛♚♝♞♜
+      ♟♟♟♟♟♟♟♟
+      --------
+      --------
+      --------
+      ----♙---
+      ♙♙♙♙-♙♙♙
+      ♖♘♗♕♔♗♘♖
+    '
+  end
 end
 
 def make_square(*args)
