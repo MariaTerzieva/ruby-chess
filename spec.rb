@@ -104,6 +104,14 @@ describe "ChessBoard" do
     empty_square = make_square(5, 5)
     board.piece_on(empty_square).should be_nil
   end
+
+  it "determines if two squares hold pieces of the same color" do
+    square1 = make_square(0, 0)
+    square2 = make_square(7, 7)
+    square3 = make_square(5, 5)
+    board.pieces_of_the_same_color?(square1, square2).should be_false
+    board.pieces_of_the_same_color?(square1, square3).should be_false
+  end
 end
 
 def make_square(*args)
