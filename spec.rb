@@ -112,6 +112,10 @@ describe "ChessBoard" do
     board.pieces_of_the_same_color?(square1, square2).should be_false
     board.pieces_of_the_same_color?(square1, square3).should be_false
   end
+
+  it "determines if player on turn has any moves left" do
+    board.any_valid_moves_for_player_on_turn?.should be_true
+  end
 end
 
 def make_square(*args)
