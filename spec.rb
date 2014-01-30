@@ -70,6 +70,23 @@ describe "Queen" do
     queen = board.piece_on(from)
     queen.valid_move?(from, to).should be_false
   end
+
+  it "doesn't make invalid moves" do
+    from = make_square(3, 7)
+    to = make_square(5, 7)
+    queen = board.piece_on(from)
+    queen.move(from, to).should be_false
+    check_rendering_of board, '
+      ♜♞♝♛♚♝♞♜
+      ♟♟♟♟♟♟♟♟
+      --------
+      --------
+      --------
+      --------
+      ♙♙♙♙♙♙♙♙
+      ♖♘♗♕♔♗♘♖
+    '
+  end
 end
 
 describe "Bishop" do
@@ -96,6 +113,23 @@ describe "Bishop" do
     bishop = board.piece_on(from)
     bishop.valid_move?(from, to).should be_false
   end
+
+  it "doesn't make invalid moves" do
+    from = make_square(5, 0)
+    to = make_square(5, 2)
+    bishop = board.piece_on(from)
+    bishop.move(from, to).should be_false
+    check_rendering_of board, '
+      ♜♞♝♛♚♝♞♜
+      ♟♟♟♟♟♟♟♟
+      --------
+      --------
+      --------
+      --------
+      ♙♙♙♙♙♙♙♙
+      ♖♘♗♕♔♗♘♖
+    '
+  end
 end
 
 describe "Knight" do  
@@ -121,6 +155,23 @@ describe "Knight" do
     to = make_square(0, 2)
     knight = board.piece_on(from)
     knight.valid_move?(from, to).should be_true
+  end
+
+  it "doesn't make invalid moves" do
+    from = make_square(1, 0)
+    to = make_square(2, 2)
+    knight = board.piece_on(from)
+    knight.move(from, to).should be_true
+    check_rendering_of board, '
+      ♜-♝♛♚♝♞♜
+      ♟♟♟♟♟♟♟♟
+      --♞-----
+      --------
+      --------
+      --------
+      ♙♙♙♙♙♙♙♙
+      ♖♘♗♕♔♗♘♖
+    '
   end
 end
 
@@ -163,7 +214,7 @@ describe "Pawn" do
     pawn.empty_or_opponent_on(square).should be_true
   end
 
-  it "moves as a pawn" do
+  it "doesn't make invalid moves" do
     from1 = make_square(3, 6)
     to = make_square(3, 4)
     pawn1 = board.piece_on(from1)
@@ -171,6 +222,16 @@ describe "Pawn" do
     from2 = make_square(5, 6)
     pawn2 = board.piece_on(from2)
     pawn2.move(from2, to).should be_false
+    check_rendering_of board, '
+      ♜♞♝♛♚♝♞♜
+      ♟♟♟♟♟♟♟♟
+      --------
+      --------
+      ---♙----
+      --------
+      ♙♙♙-♙♙♙♙
+      ♖♘♗♕♔♗♘♖
+    '
   end
 end
 
@@ -197,6 +258,23 @@ describe "Rook" do
     to = make_square(7, 5)
     rook = board.piece_on(from)
     rook.valid_move?(from, to).should be_false
+  end
+
+  it "doesn't make invalid moves" do
+    from = make_square(7, 7)
+    to = make_square(5, 7)
+    rook = board.piece_on(from)
+    rook.move(from, to).should be_false
+    check_rendering_of board, '
+      ♜♞♝♛♚♝♞♜
+      ♟♟♟♟♟♟♟♟
+      --------
+      --------
+      --------
+      --------
+      ♙♙♙♙♙♙♙♙
+      ♖♘♗♕♔♗♘♖
+    '
   end
 end
 
@@ -258,11 +336,21 @@ describe "King" do
     king.attacked_by_other?(king_position).should be_false
   end
 
-  it "moves like a king" do
+  it "doesn't make invalid moves" do
     from = make_square(4, 7)
     to = make_square(4, 5)
     king = board.piece_on(from)
     king.move(from, to).should be_false
+    check_rendering_of board, '
+      ♜♞♝♛♚♝♞♜
+      ♟♟♟♟♟♟♟♟
+      --------
+      --------
+      --------
+      --------
+      ♙♙♙♙♙♙♙♙
+      ♖♘♗♕♔♗♘♖
+    '
   end
 end
 
