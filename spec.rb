@@ -174,6 +174,98 @@ describe "Pawn" do
   end
 end
 
+describe "Rook" do
+  let(:board) { make_board }
+
+  it "exposes it's color and symbol via getters" do
+    white_rook = make_rook("white", board)
+    black_rook = make_rook("black", board)
+    white_rook.color.should eq "white"
+    white_rook.symbol.should eq '♖'
+    black_rook.color.should eq "black"
+    black_rook.symbol.should eq '♜'
+  end
+
+  it "finds any valid moves" do
+    from = make_square(7, 7)
+    rook = board.piece_on(from)
+    rook.any_moves?(from).should be_false
+  end
+
+  it "determines if a move is valid" do
+    from = make_square(7, 7)
+    to = make_square(7, 5)
+    rook = board.piece_on(from)
+    rook.valid_move?(from, to).should be_false
+  end
+end
+
+describe "King" do
+  let(:board) { make_board }
+
+  it "exposes its color and symbol via getters" do
+    white_king = make_king("white", board)
+    black_king = make_king("black", board)
+    white_king.color.should eq "white"
+    white_king.symbol.should eq '♔'
+    black_king.color.should eq "black"
+    black_king.symbol.should eq '♚'
+  end
+
+  it "finds any valid moves" do
+    from = make_square(4, 7)
+    king = board.piece_on(from)
+    king.any_moves?(from).should be_false
+  end
+
+  it "determines if a move is valid" do
+    from = make_square(4, 7)
+    to = make_square(4, 5)
+    king = board.piece_on(from)
+    king.valid_move?(from, to).should be_false
+  end
+
+  it "determines if a castle is possible" do
+    king_position = make_square(4, 0)
+    left_rook_position = make_square(0, 0)
+    right_rook_position = make_square(7, 0)
+    king = board.piece_on(king_position)
+    king.castle?(king_position, left_rook_position).should be_false
+    king.castle?(king_position, right_rook_position).should be_false
+  end
+
+  it "determines if it is safe from its position" do
+    king_position = make_square(4, 0)
+    king = board.piece_on(king_position)
+    king.safe_from?(king_position).should be_true
+  end
+
+  it "determines if it is attacked by a pawn" do
+    king_position = make_square(4, 7)
+    king = board.piece_on(king_position)
+    king.attacked_by_a_pawn?(king_position).should be_false
+  end
+
+  it "determines if it is attacked by a knight" do
+    king_position = make_square(4, 7)
+    king = board.piece_on(king_position)
+    king.attacked_by_a_knight?(king_position).should be_false
+  end 
+
+  it "determines if it is attacked by something else" do
+    king_position = make_square(4, 7)
+    king = board.piece_on(king_position)
+    king.attacked_by_other?(king_position).should be_false
+  end
+
+  it "moves like a king" do
+    from = make_square(4, 7)
+    to = make_square(4, 5)
+    king = board.piece_on(from)
+    king.move(from, to).should be_false
+  end
+end
+
 
 describe "ChessBoard" do
   let(:board) { make_board }
@@ -345,6 +437,14 @@ end
 
 def make_pawn(*args)
   Pawn.new(*args)
+end
+
+def make_rook(*args)
+  Rook.new(*args)
+end
+
+def make_king(*args)
+  King.new(*args)
 end
 
 def check_rendering_of(board, expected)
