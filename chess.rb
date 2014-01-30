@@ -195,8 +195,8 @@ class King < Piece
   end
 
   def castle?(king_position, rook_position)
-    return false if moved or not piece_on(rook_position).is_a? Rook
-    return false if piece_on(rook_position).moved
+    return false if moved or not @board.piece_on(rook_position).is_a? Rook
+    return false if @board.piece_on(rook_position).moved
     square_between_king_and_rook = Square.new(king_position.x, king_position.y)
     dx, dy, steps = rook_position.x > king_position.x ? [1, 0, 3] : [-1, 0, 4]
     return false if obstructions?(dx, dy, steps, king_position)
