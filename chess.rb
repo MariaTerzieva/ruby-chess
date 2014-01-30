@@ -352,7 +352,7 @@ class ChessBoard
 
   def move(from, to)
     @board[to.to_a] = @board[from.to_a]
-    @board.delete from
+    @board.delete from.to_a
   end
 
   def king_remains_safe_after_move?(from, to)
