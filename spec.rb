@@ -32,3 +32,32 @@ describe "Square" do
     Square.new(*args)
   end
 end
+
+describe "ChessBoard" do
+  it "prints the board correctly" do
+    board = make_board
+    check_rendering_of board, '
+      ♜♞♝♛♚♝♞♜
+      ♟♟♟♟♟♟♟♟
+      --------
+      --------
+      --------
+      --------
+      ♙♙♙♙♙♙♙♙
+      ♖♘♗♕♔♗♘♖
+    '
+  end
+
+  def make_board
+    ChessBoard.new
+  end
+
+  def check_rendering_of(board, expected)
+    output = board.print
+    output.should eq rendering(expected)
+  end
+
+  def rendering(text)
+    text.strip.gsub(/^\s+/, '')
+  end
+end
