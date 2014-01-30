@@ -124,6 +124,57 @@ describe "Knight" do
   end
 end
 
+describe "Pawn" do
+  let(:board) { make_board }
+
+  it "exposes it's color and symbol via getters" do
+    white_pawn = make_pawn("white", board)
+    black_pawn = make_pawn("black", board)
+    white_pawn.color.should eq "white"
+    white_pawn.symbol.should eq '♙'
+    black_pawn.color.should eq "black"
+    black_pawn.symbol.should eq '♟'
+  end
+
+  it "finds any valid moves" do
+    from = make_square(3, 6)
+    pawn = board.piece_on(from)
+    pawn.any_moves?(from).should be_true
+  end
+
+  it "determines if a move is valid" do
+    from = make_square(3, 6)
+    to = make_square(5, 5)
+    pawn = board.piece_on(from)
+    pawn.valid_move?(from, to).should be_false
+  end
+
+  it "moves in the right direction" do
+    from = make_square(3, 6)
+    to = make_square(5, 5)
+    pawn = make_pawn("black", board)
+    pawn.valid_direction?(from, to).should be_false
+    pawn.valid_direction?(to, from).should be_true
+  end
+
+  it "determines if a position is empty or belongs to the opponent" do
+    square = make_square(7, 7)
+    pawn = make_pawn("black", board)
+    pawn.empty_or_opponent_on(square).should be_true
+  end
+
+  it "moves as a pawn" do
+    from1 = make_square(3, 6)
+    to = make_square(3, 4)
+    pawn1 = board.piece_on(from1)
+    pawn1.move(from1, to).should be_true
+    from2 = make_square(5, 6)
+    pawn2 = board.piece_on(from2)
+    pawn2.move(from2, to).should be_false
+  end
+end
+
+
 describe "ChessBoard" do
   let(:board) { make_board }
 
@@ -290,6 +341,10 @@ end
 
 def make_knight(*args)
   Knight.new(*args)
+end
+
+def make_pawn(*args)
+  Pawn.new(*args)
 end
 
 def check_rendering_of(board, expected)
