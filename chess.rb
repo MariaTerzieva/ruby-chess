@@ -147,7 +147,7 @@ class Pawn < Piece
 
   def valid_move?(from, to)
     return false unless valid_direction?(from, to)
-    if from.delta_y(to) == 1
+    if from.delta_y(to) == 1 and from.delta_x(to) <= 1
       return false if from.x == to.x and not @board.empty?(to)
       return false if from.delta_x(to) == 1 and @board.empty?(to)
     elsif from.delta_y(to) == 2
