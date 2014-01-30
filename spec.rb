@@ -98,6 +98,32 @@ describe "Bishop" do
   end
 end
 
+describe "Knight" do  
+  let(:board) { make_board }
+
+  it "exposes it's color and symbol via getters" do
+    white_knight = make_knight("white", board)
+    black_knight = make_knight("black", board)
+    white_knight.color.should eq "white"
+    white_knight.symbol.should eq '♘'
+    black_knight.color.should eq "black"
+    black_knight.symbol.should eq '♞'
+  end
+
+  it "finds any valid moves" do
+    from = make_square(1, 0)
+    knight = board.piece_on(from)
+    knight.any_moves?(from).should be_true
+  end
+
+  it "determines if a move is valid" do
+    from = make_square(1, 0)
+    to = make_square(0, 2)
+    knight = board.piece_on(from)
+    knight.valid_move?(from, to).should be_true
+  end
+end
+
 describe "ChessBoard" do
   let(:board) { make_board }
 
@@ -260,6 +286,10 @@ end
 
 def make_bishop(*args)
   Bishop.new(*args)
+end
+
+def make_knight(*args)
+  Knight.new(*args)
 end
 
 def check_rendering_of(board, expected)
