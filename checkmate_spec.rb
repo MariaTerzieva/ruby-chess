@@ -168,6 +168,20 @@ describe "Checkmate" do
     board.make_a_move(square(7, 3), square(4, 3))
     board.white_win?.should be_true
   end
+
+  it "works with castling" do
+    board.make_a_move(square(6, 6), square(6, 4))
+    board.make_a_move(square(7, 1), square(7, 3))
+    board.make_a_move(square(5, 7), square(6, 6))
+    board.make_a_move(square(7, 3), square(6, 4))
+    board.make_a_move(square(6, 6), square(1, 1))
+    board.make_a_move(square(7, 0), square(7, 6))
+    board.make_a_move(square(6, 7), square(7, 5))
+    board.make_a_move(square(2, 0), square(1, 1))
+    board.make_a_move(square(4, 7), square(6, 7))
+    board.make_a_move(square(7, 6), square(7, 7))
+    board.black_win?.should be_true
+  end
 end
 
 def make_board
