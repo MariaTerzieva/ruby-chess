@@ -56,10 +56,10 @@ class Piece
       to, steps = Square.new(from.x, from.y), 0
       while true
         to, steps = Square.new(to.x + dx, to.y + dy), steps.succ
-        break if to.out_of_the_board
+        break if to.out_of_the_board or steps.pred == max_steps
         if @board.empty?(to) or @board.color_of_piece_on(to) != color
           return true if @board.king_remains_safe_after_move?(from, to)
-        elsif @board.color_of_piece_on(to) == color or steps == max_steps
+        elsif @board.color_of_piece_on(to) == color
           break
         end
       end
