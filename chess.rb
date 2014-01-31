@@ -59,8 +59,9 @@ class Piece
         break if to.out_of_the_board
         if @board.empty?(to) or @board.color_of_piece_on(to) != color
           return true if @board.king_remains_safe_after_move?(from, to)
+        elsif @board.color_of_piece_on(to) == color or steps == max_steps
+          break
         end
-        break if @board.color_of_piece_on(to) == color or steps == max_steps
       end
     end
     false
@@ -124,6 +125,10 @@ class Knight < Piece
     @board.king_remains_safe_after_move?(from, to)
   end
 
+  def empty_or_opponent_on(position)
+    @board.empty?(position) or @board.color_of_piece_on(position) != color
+  end
+
   def any_moves?(from)
     positions = [[from.x + 1, from.y + 2], [from.x + 2, from.y + 1],
                  [from.x + 2, from.y - 1], [from.x + 1, from.y - 2],
@@ -131,8 +136,10 @@ class Knight < Piece
                  [from.x - 1, from.y - 2], [from.x - 2, from.y - 1]]
     positions.each do |position|
       next unless position.all? { |coordinate| coordinate.between?(0, 7) }
-      return true if valid_move?(from, Square.new(*position))
+      position = Square.new(*position)
+      return true if empty_or_opponent_on(position) and valid_move?(from, position)
     end
+    false
   end
 end
 
@@ -175,6 +182,7 @@ class Pawn < Piece
       position = Square.new(*position)
       return true if empty_or_opponent_on(position) and valid_move?(from, position)
     end
+    false
   end
 
   def move(from, to)
@@ -275,7 +283,7 @@ class King < Piece
   def any_moves?(from)
     in_directions = [[1, 0], [-1, 0], [0, 1], [0, -1],
                     [1, 1], [-1, 1], [1, -1], [-1, -1]]
-    return true if super(from, in_directions)
+    return true if super(from, in_directions, 1)
     right_rook_position = Square.new(from.x + 3, from.y)
     left_rook_position = Square.new(from.x - 4, from.y)
     castle?(from, right_rook_position) or castle?(from, left_rook_position)
@@ -398,6 +406,7 @@ class ChessBoard
 
   def any_valid_moves_for_player_on_turn?
     @board.each do |from, piece|
+      next if empty?(Square.new(*from))
       return true if piece.color == turn and piece.any_moves?(Square.new(*from))
     end
     false
