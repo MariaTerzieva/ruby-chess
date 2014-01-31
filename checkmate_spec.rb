@@ -126,6 +126,22 @@ describe "Checkmate" do
     board.make_a_move(square(7, 4), square(4, 4))
     board.black_win?.should be_true
   end
+
+  it "black win again" do
+    board.make_a_move(square(3, 6), square(3, 4))
+    board.make_a_move(square(6, 0), square(5, 2))
+    board.make_a_move(square(1, 7), square(3, 6))
+    board.make_a_move(square(4, 1), square(4, 3))
+    board.make_a_move(square(3, 4), square(4, 3))
+    board.make_a_move(square(5, 2), square(6, 4))
+    board.make_a_move(square(7, 6), square(7, 5))
+    board.make_a_move(square(6, 4), square(4, 5))
+    board.make_a_move(square(5, 6), square(4, 5))
+    board.make_a_move(square(3, 0), square(7, 4))
+    board.make_a_move(square(6, 6), square(6, 5))
+    board.make_a_move(square(7, 4), square(6, 5))
+    board.black_win?.should be_true
+  end
 end
 
 def make_board
