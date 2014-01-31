@@ -209,7 +209,7 @@ class King < Piece
     dx, dy, steps = rook_position.x > king_position.x ? [1, 0, 3] : [-1, 0, 4]
     return false if obstructions?(dx, dy, steps, king_position)
     3.times do
-      return false unless king_safe?(square_between_king_and_rook)
+      return false unless safe_from?(square_between_king_and_rook)
       square_between_king_and_rook.x += dx
     end
     true
