@@ -142,6 +142,23 @@ describe "Checkmate" do
     board.make_a_move(square(7, 4), square(6, 5))
     board.black_win?.should be_true
   end
+
+  it "works as expected when the game is longer" do
+    board.make_a_move(square(4, 6), square(4, 4))
+    board.make_a_move(square(4, 1), square(4, 3))
+    board.make_a_move(square(6, 7), square(5, 5))
+    board.make_a_move(square(3, 1), square(3, 2))
+    board.make_a_move(square(5, 7), square(2, 4))
+    board.make_a_move(square(7, 1), square(7, 2))
+    board.make_a_move(square(1, 7), square(2, 5))
+    board.make_a_move(square(2, 0), square(6, 4))
+    board.make_a_move(square(5, 5), square(4, 3))
+    board.make_a_move(square(6, 4), square(3, 7))
+    board.make_a_move(square(2, 4), square(5, 1))
+    board.make_a_move(square(4, 0), square(4, 1))
+    board.make_a_move(square(2, 5), square(3, 3))
+    board.white_win?.should be_true
+  end
 end
 
 def make_board
