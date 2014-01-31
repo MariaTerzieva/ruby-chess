@@ -79,7 +79,19 @@ describe "Checkmate" do
       ♙♙♙♙-♙♙♙
       ♖♘♗-♔-♘♖
     '
-    board.any_valid_moves_for_player_on_turn?
+    board.white_win?.should be_true
+  end
+
+  it "the white win" do
+    board.make_a_move(square(4, 6), square(4, 4))
+    board.make_a_move(square(1, 1), square(1, 2))
+    board.make_a_move(square(3, 7), square(5, 5))
+    board.make_a_move(square(1, 0), square(2, 2))
+    board.make_a_move(square(5, 7), square(2, 4))
+    board.make_a_move(square(3, 1), square(3, 2))
+    board.make_a_move(square(5, 5), square(5, 1))
+    board.make_a_move(square(4, 0), square(3, 1))
+    board.make_a_move(square(2, 4), square(4, 2))
     board.white_win?.should be_true
   end
 end
