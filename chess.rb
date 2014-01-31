@@ -210,7 +210,8 @@ class King < Piece
     return false if obstructions?(dx, dy, steps, king_position)
     3.times do
       return false unless safe_from?(square_between_king_and_rook)
-      square_between_king_and_rook.x += dx
+      next_square = Square.new(square_between_king_and_rook.x + dx, square_between_king_and_rook.y)
+      square_between_king_and_rook = next_square
     end
     true
   end 
