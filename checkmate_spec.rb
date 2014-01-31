@@ -105,6 +105,15 @@ describe "Checkmate" do
     board.make_a_move(square(7, 3), square(5, 1))
     board.white_win?.should be_true
   end
+
+  it "black lose" do
+    board.make_a_move(square(4, 6), square(4, 4))
+    board.make_a_move(square(5, 1), square(5, 2))
+    board.make_a_move(square(3, 6), square(3, 4))
+    board.make_a_move(square(6, 1), square(6, 3))
+    board.make_a_move(square(3, 7), square(7, 3))
+    board.white_win?.should be_true
+  end 
 end
 
 def make_board
