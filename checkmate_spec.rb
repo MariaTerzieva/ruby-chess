@@ -159,6 +159,15 @@ describe "Checkmate" do
     board.make_a_move(square(2, 5), square(3, 3))
     board.white_win?.should be_true
   end
+
+  it "works as expected when game is very short" do
+    board.make_a_move(square(4, 6), square(4, 4))
+    board.make_a_move(square(4, 1), square(4, 3))
+    board.make_a_move(square(3, 7), square(7, 3))
+    board.make_a_move(square(4, 0), square(4, 1))
+    board.make_a_move(square(7, 3), square(4, 3))
+    board.white_win?.should be_true
+  end
 end
 
 def make_board
