@@ -82,7 +82,7 @@ describe "Checkmate" do
     board.white_win?.should be_true
   end
 
-  it "the white win" do
+  it "white win" do
     board.make_a_move(square(4, 6), square(4, 4))
     board.make_a_move(square(1, 1), square(1, 2))
     board.make_a_move(square(3, 7), square(5, 5))
@@ -92,6 +92,17 @@ describe "Checkmate" do
     board.make_a_move(square(5, 5), square(5, 1))
     board.make_a_move(square(4, 0), square(3, 1))
     board.make_a_move(square(2, 4), square(4, 2))
+    board.white_win?.should be_true
+  end
+
+  it "white win again" do
+    board.make_a_move(square(4, 6), square(4, 4))
+    board.make_a_move(square(4, 1), square(4, 3))
+    board.make_a_move(square(5, 7), square(2, 4))
+    board.make_a_move(square(5, 0), square(2, 3))
+    board.make_a_move(square(3, 7), square(7, 3))
+    board.make_a_move(square(6, 0), square(5, 2))
+    board.make_a_move(square(7, 3), square(5, 1))
     board.white_win?.should be_true
   end
 end
