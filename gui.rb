@@ -36,6 +36,12 @@ def draw_board
   end
 end
 
+def get_square_at(pixel)
+  x = (pixel[0] - X_MARGIN).div BOX_SIZE
+  y = (pixel[1] - Y_MARGIN).div BOX_SIZE
+  [x, y]
+end
+
 Shoes.app(width: WINDOW_WIDTH, height: WINDOW_HEIGHT, title: TITLE) do
   background rgb(*BACKGROUND)
   draw_board
