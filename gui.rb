@@ -79,20 +79,6 @@ def save_game(board)
   end
 end
 
-def load_game
-  input = edit_line
-  ok = button "OK"
-  ok.click do
-    store = YAML::Store.new "./games.store"
-    store.transaction do
-      board = store[input.text]
-    end
-  end
-  ok.remove
-  input.remove
-  board
-end
-
 def mark(square, board)
   left, top = left_top_coordinates_of(square.to_a)
   fill red
@@ -154,10 +140,10 @@ Shoes.app(width: WINDOW_WIDTH, height: WINDOW_HEIGHT, title: TITLE) do
   background rgb(*BACKGROUND)
   stack(margin: 10) do
     new_game = button "New  game"
-    load = button "Load game"
+    load_game = button "Load game"
 
     new_game.click { game(ChessBoard.new) }
-    load.click do
+    load_game.click do
       input = edit_line width: 100
       ok = button "OK"
       ok.click do
