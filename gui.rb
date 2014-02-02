@@ -67,6 +67,23 @@ def mark(square, board)
   end
 end
 
+def winner_alert(status)
+  Shoes.app(width: WINDOW_WIDTH, height: WINDOW_HEIGHT, title: TITLE) do
+    background rgb(*BACKGROUND)
+    title(status,
+          top: WINDOW_HEIGHT.div(2),
+          align: "center",
+          font: "Trebuchet MS",
+          stroke: white)
+  end
+end
+
+def check_for_winner(board)
+  if board.white_win? or board.black_win? or board.stalemate?
+    winner_alert board.game_status
+  end
+end
+
 Shoes.app(width: WINDOW_WIDTH, height: WINDOW_HEIGHT, title: TITLE) do
   board = ChessBoard.new
   first_selection = EMPTY
@@ -78,7 +95,8 @@ Shoes.app(width: WINDOW_WIDTH, height: WINDOW_HEIGHT, title: TITLE) do
     square = get_square_at([left, top])
     unless square.out_of_the_board
       if first_selection
-        board.make_a_move(first_selection, square)
+        board.make_a_move(first_selection, square)       
+        check_for_winner(board)
         first_selection = EMPTY
         draw_board
         draw_pieces(board)
