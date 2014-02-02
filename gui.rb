@@ -60,11 +60,28 @@ end
 def get_square_at(pixel)
   x = (pixel[0] - X_MARGIN).div BOX_SIZE
   y = (pixel[1] - Y_MARGIN).div BOX_SIZE
-  [x, y]
+  Square.new(x, y)
 end
+
+board = ChessBoard.new
+first_selection = EMPTY
 
 Shoes.app(width: WINDOW_WIDTH, height: WINDOW_HEIGHT, title: TITLE) do
   background rgb(*BACKGROUND)
   draw_board
-  draw_pieces(ChessBoard.new)
+  draw_pieces(board)
+
+  self.click do |button, left, top|
+    square = get_square_at([left, top])
+    unless square.out_of_the_board
+      if first_selection
+        board.make_a_move(first_selection, square)
+        first_selection = EMPTY
+        draw_board
+        draw_pieces(board)
+      else
+        first_selection = square
+      end
+    end
+  end
 end
