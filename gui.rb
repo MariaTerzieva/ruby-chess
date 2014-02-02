@@ -26,12 +26,33 @@ def top_left_coordinates_of(square)
   [top, left]
 end
 
+def left_top_coordinates_of(square)
+  left = square[0] * BOX_SIZE + X_MARGIN
+  top = square[1] * BOX_SIZE + Y_MARGIN
+  [left, top]
+end
+
 def draw_board
   BOARD_HEIGHT.times do |row|
     BOARD_WIDTH.times do |column|
       top, left = top_left_coordinates_of([column, row])
       (row + column).remainder(2).zero? ? fill(rgb(*LIGHT_BOX_COLOR)) : fill(rgb(*DARK_BOX_COLOR))
       rect top, left, BOX_SIZE, BOX_SIZE
+    end
+  end
+end
+
+def draw_pieces(board)
+  BOARD_HEIGHT.times do |row|
+    BOARD_WIDTH.times do |column|
+      square = Square.new(row, column)
+      case board.piece_on(square)
+        when EMPTY
+          next
+        else
+          picture = image board.piece_on(square).image_path
+          picture.move *left_top_coordinates_of(square.to_a)
+      end
     end
   end
 end
@@ -45,4 +66,5 @@ end
 Shoes.app(width: WINDOW_WIDTH, height: WINDOW_HEIGHT, title: TITLE) do
   background rgb(*BACKGROUND)
   draw_board
+  draw_pieces(ChessBoard.new)
 end
