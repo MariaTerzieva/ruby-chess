@@ -63,10 +63,9 @@ def get_square_at(pixel)
   Square.new(x, y)
 end
 
-board = ChessBoard.new
-first_selection = EMPTY
-
 Shoes.app(width: WINDOW_WIDTH, height: WINDOW_HEIGHT, title: TITLE) do
+  board = ChessBoard.new
+  first_selection = EMPTY
   background rgb(*BACKGROUND)
   draw_board
   draw_pieces(board)
