@@ -1,4 +1,5 @@
 require 'green_shoes'
+require 'yaml/store'
 require './chess.rb'
 
 WINDOW_WIDTH = 640
@@ -57,6 +58,41 @@ def get_square_at(pixel)
   Square.new(x, y)
 end
 
+def save_game(board)
+  Shoes.app(width: 320, height: 100, title: TITLE) do
+    background white
+    border green, strokewidth: 6
+    stack(margin: 12) do
+      para "Enter name of the game"
+      flow do
+        input = edit_line
+        ok = button "OK"
+        ok.click do
+          store = YAML::Store.new "./games.store"
+          store.transaction do
+            store[input.text] = board
+          end
+          exit
+        end
+      end
+    end
+  end
+end
+
+def load_game
+  input = edit_line
+  ok = button "OK"
+  ok.click do
+    store = YAML::Store.new "./games.store"
+    store.transaction do
+      board = store[input.text]
+    end
+  end
+  ok.remove
+  input.remove
+  board
+end
+
 def mark(square, board)
   left, top = left_top_coordinates_of(square.to_a)
   fill red
@@ -87,12 +123,15 @@ def check_for_winner(board)
   end
 end
 
-Shoes.app(width: WINDOW_WIDTH, height: WINDOW_HEIGHT, title: TITLE) do
-  board = ChessBoard.new
+def game(board)
   first_selection = EMPTY
   background rgb(*BACKGROUND)
   draw_board
   draw_pieces(board)
+  save = button "Save game"
+  save.move 550, 12
+
+  save.click { save_game(board) }
 
   click do |button, left, top|
     square = get_square_at([left, top])
@@ -106,6 +145,28 @@ Shoes.app(width: WINDOW_WIDTH, height: WINDOW_HEIGHT, title: TITLE) do
       else
         first_selection = square
         mark square, board
+      end
+    end
+  end
+end
+
+Shoes.app(width: WINDOW_WIDTH, height: WINDOW_HEIGHT, title: TITLE) do
+  background rgb(*BACKGROUND)
+  stack(margin: 10) do
+    new_game = button "New  game"
+    load = button "Load game"
+
+    new_game.click { game(ChessBoard.new) }
+    load.click do
+      input = edit_line width: 100
+      ok = button "OK"
+      ok.click do
+        store = YAML::Store.new "./games.store"
+        ok.hide
+        input.remove
+        store.transaction do
+          game(store[input.text])
+        end
       end
     end
   end
