@@ -1,4 +1,5 @@
-require "./chess.rb"
+require 'yaml/store'
+require './chess.rb'
 
 class ConsoleUI
   def initialize(board)
@@ -31,23 +32,72 @@ class ConsoleUI
     input.downcase.scan(/[a-h][1-8][a-h][1-8]/).length != 1
   end
 
+  def save_load_dialogue
+    puts "Type the name of the game."
+    print "> "
+  end
+
+  def save
+    store = YAML::Store.new "./games.store"
+    store.transaction do
+      save_load_dialogue
+      input = gets.chomp
+      store[input] = @board
+    end
+  end
+
+  def nonexistent?(game)
+    game.nil?
+  end
+
+  def load
+    store = YAML::Store.new "./games.store"
+    store.transaction do
+      save_load_dialogue
+      input = gets.chomp
+      store[input]
+    end
+  end
+
+  def print_instructions
+    puts "Type a move in chess notation(e.g. a2a3)."
+    puts "Type 'quit' to exit the game."
+    puts "Type 'save' to save the game."
+    puts "Type 'load' to load a game."
+    print "> "
+  end   
+
   def play
     system("clear")
+
     if @board.game_status != "Game in progress."
       puts @board.game_status
       exit
     end
+
     print_turn_and_board
-    puts "Type a move in chess notation(e.g. a2a3) or 'quit' to exit the game."
-    print "> "
+    print_instructions
+
     input = gets.chomp
-    exit if input == "exit"
-    if invalid?(input)
-      puts "Type a move in chess notation, please!"
-      sleep(1)
+    if input == "quit"
+      exit
+    elsif input == "save"
+      save
+    elsif input == "load"
+      game = load
+      while nonexistent?(game)
+        game = load
+      end
+      @board = game
     else
-      @board.make_a_move(*coordinates_in_my_notation(input))
+      if invalid?(input)
+        puts "Type a move in chess notation, please!"
+        sleep(1)
+      else
+        @board.make_a_move(*coordinates_in_my_notation(input))
+      end
     end
+
     play
   end
 end
