@@ -71,7 +71,7 @@ Shoes.app(width: WINDOW_WIDTH, height: WINDOW_HEIGHT, title: TITLE) do
   draw_board
   draw_pieces(board)
 
-  self.click do |button, left, top|
+  click do |button, left, top|
     square = get_square_at([left, top])
     unless square.out_of_the_board
       if first_selection
