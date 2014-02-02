@@ -69,11 +69,12 @@ class Piece
 end
 
 class Queen < Piece
-  attr_reader :symbol
+  attr_reader :symbol, :image_path
 
   def initialize(color, board)
     super
     @symbol = color == WHITE ? '♕' : '♛'
+    @image_path = color == WHITE ? "./images/WQ.png" : "./images/BQ.png"
   end
 
   def valid_move?(from, to)
@@ -88,11 +89,12 @@ class Queen < Piece
 end
 
 class Bishop < Piece
-  attr_reader :symbol
+  attr_reader :symbol, :image_path
 
   def initialize(color, board)
     super
     @symbol = color == WHITE ? '♗' : '♝'
+    @image_path = color == WHITE ? "./images/WB.png" : "./images/BB.png"
   end
 
   def valid_move?(from, to)
@@ -111,11 +113,12 @@ class Bishop < Piece
 end
 
 class Knight < Piece
-  attr_reader :symbol
+  attr_reader :symbol, :image_path
 
   def initialize(color, board)
     super
     @symbol = color == WHITE ? '♘' : '♞'
+    @image_path = color == WHITE ? "./images/WN.png" : "./images/BN.png"
   end
 
   def valid_move?(from, to)
@@ -144,12 +147,13 @@ class Knight < Piece
 end
 
 class Pawn < Piece
-  attr_reader :moved, :symbol
+  attr_reader :moved, :symbol, :image_path
 
   def initialize(color, board)
     super
     @moved = false
     @symbol = color == WHITE ? '♙' : '♟'
+    @image_path = color == WHITE ? "./images/WP.png" : "./images/BP.png"
   end
 
   def valid_move?(from, to)
@@ -194,12 +198,13 @@ class Pawn < Piece
 end
 
 class King < Piece
-  attr_reader :moved, :symbol
+  attr_reader :moved, :symbol, :image_path
 
   def initialize(color, board)
     super
     @moved = false
     @symbol = color == WHITE ? '♔' : '♚'
+    @image_path = color == WHITE ? "./images/WK.png" : "./images/BK.png"
   end
 
   def castle?(king_position, rook_position)
@@ -304,12 +309,13 @@ class King < Piece
 end
 
 class Rook < Piece
-  attr_reader :moved, :symbol
+  attr_reader :moved, :symbol, :image_path
 
   def initialize(color, board)
     super
     @moved = false
     @symbol = color == WHITE ? '♖' : '♜'
+    @image_path = color == WHITE ? "./images/WR.png" : "./images/BR.png"
   end
 
   def valid_move?(from, to)
