@@ -57,6 +57,16 @@ def get_square_at(pixel)
   Square.new(x, y)
 end
 
+def mark(square, board)
+  left, top = left_top_coordinates_of(square.to_a)
+  fill red
+  rect left, top, BOX_SIZE, BOX_SIZE
+  if board.piece_on(square)
+    piece = image board.piece_on(square).image_path
+    piece.move left, top
+  end
+end
+
 Shoes.app(width: WINDOW_WIDTH, height: WINDOW_HEIGHT, title: TITLE) do
   board = ChessBoard.new
   first_selection = EMPTY
@@ -74,6 +84,7 @@ Shoes.app(width: WINDOW_WIDTH, height: WINDOW_HEIGHT, title: TITLE) do
         draw_pieces(board)
       else
         first_selection = square
+        mark square, board
       end
     end
   end
