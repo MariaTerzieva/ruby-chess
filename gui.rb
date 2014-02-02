@@ -75,6 +75,9 @@ def winner_alert(status)
           align: "center",
           font: "Trebuchet MS",
           stroke: white)
+    ok_button = button "OK"
+    ok_button.move WINDOW_WIDTH.div(2), (WINDOW_HEIGHT.div(2) + 50)
+    ok_button.click { exit }
   end
 end
 
