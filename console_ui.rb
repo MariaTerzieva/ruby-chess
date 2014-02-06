@@ -68,7 +68,7 @@ class ConsoleUI
   end   
 
   def play
-    system("clear")
+    system "clear"
 
     if @board.game_status != "Game in progress."
       puts @board.game_status
@@ -85,16 +85,16 @@ class ConsoleUI
       save
     elsif input == "load"
       game = load
-      while nonexistent?(game)
+      while nonexistent? game
         game = load
       end
       @board = game
     else
-      if invalid?(input)
+      if invalid? input
         puts "Type a move in chess notation, please!"
-        sleep(1)
+        sleep 1
       else
-        @board.make_a_move(*coordinates_in_my_notation(input))
+        @board.make_a_move *coordinates_in_my_notation(input)
       end
     end
 
