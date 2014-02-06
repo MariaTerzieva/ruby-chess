@@ -105,14 +105,14 @@ class Bishop < Piece
     return false if from.delta_x(to) != from.delta_y(to)
     dx = to.x <=> from.x
     dy = to.y <=> from.y
-    steps = from.delta_x(to)
-    return false if obstructions?(dx, dy, steps, from)
-    @board.king_remains_safe_after_move?(from, to)
+    steps = from.delta_x to
+    return false if obstructions? dx, dy, steps, from
+    @board.king_remains_safe_after_move? from, to
   end
 
   def any_moves?(from)
     in_directions = [[1, 1], [-1, 1], [1, -1], [-1, -1]]
-    super(from, in_directions)
+    super from, in_directions
   end
 end
 
