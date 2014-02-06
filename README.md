@@ -79,3 +79,8 @@ Contribution
 
 In case you find any issues with this code, use the project's Issues page to report them
 or send pull requests.
+
+License
+-------
+
+Released under the MIT License.
