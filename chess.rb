@@ -39,12 +39,11 @@ class Piece
   end
 
   def obstructions?(dx, dy, steps, position)
-    (1...steps).each do |step|
+    (1...steps).any? do |step|
       x = position.x + step * dx
       y = position.y + step * dy
-      return true unless @board.empty?(Square.new(x, y))
+      not @board.empty?(Square.new(x, y))
     end
-    false
   end
 
   def move(from, to)
