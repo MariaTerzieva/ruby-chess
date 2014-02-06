@@ -14,6 +14,10 @@ class Square
     [x, y].any? { |coordinate| coordinate < 0 or coordinate > 7 }
   end
 
+  def inside_the_board?
+    not out_of_the_board?
+  end
+
   def to_a
     [x, y]
   end
@@ -52,15 +56,16 @@ class Piece
 
   def any_moves?(from, in_directions, max_steps=8)
     in_directions.each do |dx, dy|
-      to, steps = Square.new(from.x, from.y), 0
-      while true
-        to, steps = Square.new(to.x + dx, to.y + dy), steps.succ
-        break if to.out_of_the_board? or steps.pred == max_steps
+      to = Square.new from.x + dx, from.y + dy
+      steps = 0
+      while steps == max_steps and to.inside_the_board?
         if @board.empty?(to) or @board.color_of_piece_on(to) != color
-          return true if @board.king_remains_safe_after_move?(from, to)
+          return true if @board.king_remains_safe_after_move? from, to
         elsif @board.color_of_piece_on(to) == color
           break
         end
+        steps += 1
+        to = Square.new to.x + dx, to.y + dy
       end
     end
     false
