@@ -88,7 +88,7 @@ class Queen < Piece
   def any_moves?(from)
     in_directions = [[1, 0], [-1, 0], [0, 1], [0, -1],
                      [1, 1], [-1, 1], [1, -1], [-1, -1]]
-    super(from, in_directions)
+    super from, in_directions
   end
 end
 
