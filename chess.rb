@@ -42,12 +42,12 @@ class Piece
     (1...steps).any? do |step|
       x = position.x + step * dx
       y = position.y + step * dy
-      not @board.empty?(Square.new(x, y))
+      not @board.empty? Square.new x, y
     end
   end
 
   def move(from, to)
-    @board.move(from, to) if valid_move?(from, to)
+    @board.move from, to if valid_move? from, to
   end
 
   def any_moves?(from, in_directions, max_steps=8)
