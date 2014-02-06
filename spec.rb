@@ -373,7 +373,6 @@ describe "ChessBoard" do
 
   it "is properly initialized" do
     board.game_status.should eq "Game in progress."
-    board.promotion?.should be_false
     board.turn.should eq "white"
   end
 
@@ -492,10 +491,6 @@ describe "ChessBoard" do
     board.white_win?.should be_false
     board.black_win?.should be_false
     board.stalemate?.should be_false
-  end
-
-  it "determines if a pawn should be promoted" do
-    board.promotion?.should be_false
   end
 end
 

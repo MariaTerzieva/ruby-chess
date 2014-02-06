@@ -150,7 +150,7 @@ class Knight < Piece
 end
 
 class Pawn < Piece
-  attr_reader :moved, :symbol, :image_path
+  attr_reader :symbol, :image_path
 
   def initialize(color, board)
     super
@@ -160,16 +160,17 @@ class Pawn < Piece
   end
 
   def valid_move?(from, to)
-    return false unless valid_direction?(from, to)
+    return false unless valid_direction? from, to
     if from.delta_y(to) == 1 and from.delta_x(to) <= 1
-      return false if from.x == to.x and not @board.empty?(to)
-      return false if from.delta_x(to) == 1 and @board.empty?(to)
+      return false if from.x == to.x and not @board.empty? to
+      return false if from.delta_x(to) == 1 and @board.empty? to
     elsif from.delta_y(to) == 2
-      return false if moved or from.x != to.x or obstructions?(0, to.y <=> from.y , 3, from)
+      dx, dy, steps, position = 0, to.y <=> from.y, 3, from
+      return false if @moved or from.x != to.x or obstructions? dx, dy, steps, position
     else
       return false
     end
-    @board.king_remains_safe_after_move?(from, to)
+    @board.king_remains_safe_after_move? from, to
   end
 
   def valid_direction?(from, to)
@@ -184,19 +185,15 @@ class Pawn < Piece
     positions = [[from.x + 1, from.y - 1], [from.x, from.y - 1], 
                  [from.x - 1, from.y - 1], [from.x, from.y + 1],
                  [from.x + 1, from.y + 1], [from.x - 1, from.y + 1]]
-    positions.each do |position|
-      next unless position.all? { |coordinate| coordinate.between?(0, 7) }
+    positions.any? do |position|
       position = Square.new(*position)
-      return true if empty_or_opponent_on(position) and valid_move?(from, position)
+      next unless position.inside_the_board?
+      empty_or_opponent_on(position) and valid_move?(from, position)
     end
-    false
   end
 
   def move(from, to)
-    if super
-      @board.pawn_promotion_position = to if to.y == 0 or to.y == 7
-      @moved = true
-    end
+    @moved = true if super
   end
 end
 
@@ -342,7 +339,6 @@ end
 
 class ChessBoard
   attr_reader :game_status, :turn
-  attr_writer :pawn_promotion_position
 
   WHITE = "white".freeze
   BLACK = "black".freeze
@@ -371,7 +367,6 @@ class ChessBoard
     end
     @turn = WHITE
     @game_status = GAME_IN_PROGRESS
-    @pawn_promotion_position = nil
   end
 
   def move(from, to)
@@ -470,16 +465,6 @@ class ChessBoard
 
   def stalemate?
     @game_status == STALEMATE
-  end
-
-  def promote_pawn_to(piece)
-    @board[pawn_promotion_position.to_a] = piece
-    @pawn_promotion_position = nil
-    game_over?
-  end
-
-  def promotion?
-    @pawn_promotion_position
   end
 
   def print
