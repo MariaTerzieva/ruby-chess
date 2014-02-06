@@ -17,7 +17,7 @@ describe "Square" do
 
   it "is true if square is out of the chess board" do
     square = make_square(-1, 8)
-    square.out_of_the_board.should be_true
+    square.out_of_the_board?.should be_true
   end
 
   it "calculates the distance between the x coordinates of two squares" do

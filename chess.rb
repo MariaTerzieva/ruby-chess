@@ -10,7 +10,7 @@ class Square
     x == other.x and y == other.y
   end
 
-  def out_of_the_board
+  def out_of_the_board?
     [x, y].any? { |coordinate| coordinate < 0 or coordinate > 7 }
   end
 
@@ -56,7 +56,7 @@ class Piece
       to, steps = Square.new(from.x, from.y), 0
       while true
         to, steps = Square.new(to.x + dx, to.y + dy), steps.succ
-        break if to.out_of_the_board or steps.pred == max_steps
+        break if to.out_of_the_board? or steps.pred == max_steps
         if @board.empty?(to) or @board.color_of_piece_on(to) != color
           return true if @board.king_remains_safe_after_move?(from, to)
         elsif @board.color_of_piece_on(to) == color
@@ -271,7 +271,7 @@ class King < Piece
       to, steps = Square.new(position.x, position.y), 0
       while true
         to, steps = Square.new(to.x + dx, to.y + dy), steps.succ
-        break if to.out_of_the_board
+        break if to.out_of_the_board?
         next if @board.empty?(to)
         break if @board.color_of_piece_on(to) == color
         case @board.piece_on(to)
@@ -388,7 +388,7 @@ class ChessBoard
   end
 
   def out_of_the_board?(from, to)
-    from.out_of_the_board or to.out_of_the_board
+    from.out_of_the_board? or to.out_of_the_board?
   end
 
   def color_of_piece_on(position)

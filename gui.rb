@@ -121,7 +121,7 @@ def game(board)
 
   click do |button, left, top|
     square = get_square_at([left, top])
-    unless square.out_of_the_board
+    unless square.out_of_the_board?
       if first_selection
         board.make_a_move(first_selection, square)       
         check_for_winner(board)
