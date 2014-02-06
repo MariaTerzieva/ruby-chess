@@ -362,8 +362,8 @@ class ChessBoard
     }
     0.upto(7).each do |column|
       2.upto(5).each do |row|
-        @board[[column, 1]] = Pawn.new(BLACK, self)
-        @board[[column, 6]] = Pawn.new(WHITE, self)
+        @board[[column, 1]] = Pawn.new BLACK, self
+        @board[[column, 6]] = Pawn.new WHITE, self
         @board[[column, row]] = nil
       end
     end
@@ -379,10 +379,10 @@ class ChessBoard
 
   def king_remains_safe_after_move?(from, to)
     board = @board.dup
-    move(from, to)
-    x, y, king = king_of(turn)
-    king_position = Square.new(x, y)
-    result = king.safe_from?(king_position)
+    move from, to
+    x, y, king = king_of turn
+    king_position = Square.new x, y
+    result = king.safe_from? king_position
     @board = board
     result
   end
@@ -412,16 +412,15 @@ class ChessBoard
   end
 
   def any_valid_moves_for_player_on_turn?
-    @board.each do |from, piece|
-      next if empty?(Square.new(*from))
-      return true if piece.color == turn and piece.any_moves?(Square.new(*from))
+    @board.any? do |from, piece|
+      next if empty? Square.new *from
+      piece.color == turn and piece.any_moves? Square.new *from
     end
-    false
   end
 
   def king_of_current_player_is_in_check?
-    x, y, king = king_of(turn)
-    true unless king.safe_from?(Square.new(x, y))
+    x, y, king = king_of turn
+    true unless king.safe_from? Square.new x, y
   end
 
   def switch_players
@@ -433,7 +432,7 @@ class ChessBoard
   end
 
   def allowed_to_move_piece_on?(from, to)
-    piece_on(from).move(from, to)
+    piece_on(from).move from, to
   end
 
   def game_over?
@@ -447,12 +446,12 @@ class ChessBoard
   end
 
   def make_a_move(from, to)
-    return if empty?(from)
-    return if out_of_the_board?(from, to)
-    return if pieces_of_the_same_color?(from, to)
+    return if empty? from
+    return if out_of_the_board? from, to
+    return if pieces_of_the_same_color? from, to
     return if from == to
-    return unless player_owns_piece_on?(from)
-    return unless allowed_to_move_piece_on?(from, to)
+    return unless player_owns_piece_on? from
+    return unless allowed_to_move_piece_on? from, to
     switch_players
     game_over?
   end
@@ -473,7 +472,7 @@ class ChessBoard
     result = ""
     0.upto(7).each do |row|
       0.upto(7).each do |column|
-        square = Square.new(column, row)
+        square = Square.new column, row
         result << (empty?(square) ? '-' : piece_on(square).symbol)
       end
       result << "\n"
