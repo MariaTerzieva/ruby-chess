@@ -58,7 +58,7 @@ class Piece
     in_directions.each do |dx, dy|
       to = Square.new from.x + dx, from.y + dy
       steps = 0
-      while steps == max_steps and to.inside_the_board?
+      while steps != max_steps and to.inside_the_board?
         if @board.empty?(to) or @board.color_of_piece_on(to) != color
           return true if @board.king_remains_safe_after_move? from, to
         elsif @board.color_of_piece_on(to) == color
@@ -198,7 +198,7 @@ class Pawn < Piece
 end
 
 class King < Piece
-  attr_reader :moved, :symbol, :image_path
+  attr_reader :symbol, :image_path
 
   def initialize(color, board)
     super
@@ -208,33 +208,33 @@ class King < Piece
   end
 
   def castle?(king_position, rook_position)
-    return false if moved or not @board.piece_on(rook_position).is_a? Rook
+    return false if @moved or not @board.piece_on(rook_position).is_a? Rook
     return false if @board.piece_on(rook_position).moved
-    square_between_king_and_rook = Square.new(king_position.x, king_position.y)
+
     dx, dy, steps = rook_position.x > king_position.x ? [1, 0, 3] : [-1, 0, 4]
-    return false if obstructions?(dx, dy, steps, king_position)
-    3.times do
-      return false unless safe_from?(square_between_king_and_rook)
-      next_square = Square.new(square_between_king_and_rook.x + dx, square_between_king_and_rook.y)
-      square_between_king_and_rook = next_square
+    return false if obstructions? dx, dy, steps, king_position
+
+    square = Square.new king_position.x - dx, king_position.y
+    3.times.all? do
+      square = Square.new square.x + dx, square.y
+      safe_from? square
     end
-    true
   end 
 
   def valid_move?(from, to)
     return false if from.delta_y(to) > 1
     if from.delta_x(to) > 1
       if to.x == from.x + 2 and from.y == to.y
-        rook_position = Square.new(7, from.y)
-        return false unless castle?(from, rook_position)
+        rook_position = Square.new 7, from.y
+        return false unless castle? from, rook_position
       elsif to.x == from.x - 2 and from.y == to.y
-        rook_position = Square.new(0, from.y)
-        return false unless castle?(from, rook_position) 
+        rook_position = Square.new 0, from.y
+        return false unless castle? from, rook_position 
       else
         return false
       end
     end
-    @board.king_remains_safe_after_move?(from, to)
+    @board.king_remains_safe_after_move? from, to
   end
 
   def safe_from?(position)
@@ -268,13 +268,15 @@ class King < Piece
     directions = [[1, 0], [-1, 0], [0, 1], [0, -1],
                   [1, 1], [-1, 1], [1, -1], [-1, -1]]
     directions.each do |dx, dy|
-      to, steps = Square.new(position.x, position.y), 0
+      to = Square.new position.x, position.y
+      steps = 0
       while true
-        to, steps = Square.new(to.x + dx, to.y + dy), steps.succ
+        to = Square.new to.x + dx, to.y + dy
+        steps += 1
         break if to.out_of_the_board?
-        next if @board.empty?(to)
+        next if @board.empty? to
         break if @board.color_of_piece_on(to) == color
-        case @board.piece_on(to)
+        case @board.piece_on to
           when King  then return true if steps == 1
           when Queen then return true
           when Rook then return true if dx.abs != dy.abs
@@ -289,20 +291,20 @@ class King < Piece
   def any_moves?(from)
     in_directions = [[1, 0], [-1, 0], [0, 1], [0, -1],
                     [1, 1], [-1, 1], [1, -1], [-1, -1]]
-    return true if super(from, in_directions, 1)
-    right_rook_position = Square.new(from.x + 3, from.y)
-    left_rook_position = Square.new(from.x - 4, from.y)
+    return true if super from, in_directions, 1
+    right_rook_position = Square.new from.x + 3, from.y
+    left_rook_position = Square.new from.x - 4, from.y
     castle?(from, right_rook_position) or castle?(from, left_rook_position)
   end
 
   def move(from, to)
-    if valid_move?(from, to)
+    if valid_move? from, to
       if to.x == from.x + 2
-        @board.move(Square.new(7, to.y), Square.new(5, to.y))
+        @board.move Square.new(7, to.y), Square.new(5, to.y)
       elsif to.x == from.x - 2
-        @board.move(Square.new(0, to.y), Square.new(3, to.y))
+        @board.move Square.new(0, to.y), Square.new(3, to.y)
       end
-      @board.move(from, to)
+      @board.move from, to
       @moved = true
     end
   end
