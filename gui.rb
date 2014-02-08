@@ -1,6 +1,6 @@
 require 'green_shoes'
 require 'yaml/store'
-require './chess.rb'
+require_relative 'chess'
 
 WINDOW_WIDTH = 640.freeze
 WINDOW_HEIGHT = 480.freeze

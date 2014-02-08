@@ -1,5 +1,5 @@
 require 'yaml/store'
-require './chess.rb'
+require_relative 'chess'
 
 class ConsoleUI
   def initialize(board)
