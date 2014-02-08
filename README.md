@@ -12,10 +12,11 @@ Requirements
 You should have Ruby 2.1.0 properly installed. I guess it might work with
 older versions of Ruby so you can try that out but I can't guarantee anything.
 
-If you want to run the tests, you'll have to install `rspec`. It is easy. Just
+If you want to run the tests, you'll have to install `rspec` and `bundler`. It is easy. Just
 run the following command in terminal:
 
 `gem install rspec`
+`gem install bundler`
 
 If you want to play the game with the GUI, you'll have to install `green_shoes`:
 
@@ -68,11 +69,7 @@ Running the tests
 
 If you want to run the tests, type the following command in terminal:
 
-`rspec spec.rb --require ./chess.rb --colour --format documentation`
-
-and:
-
-`rspec checkmate_spec.rb --require ./chess.rb --colour --format documentation`
+`bundle exec rake check`
 
 Contribution
 ------------
