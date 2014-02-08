@@ -132,7 +132,7 @@ describe "Bishop" do
   end
 end
 
-describe "Knight" do  
+describe "Knight" do
   let(:board) { make_board }
 
   it "exposes it's color and symbol via getters" do
@@ -328,7 +328,7 @@ describe "King" do
     king_position = make_square(4, 7)
     king = board.piece_on(king_position)
     king.attacked_by_a_knight?(king_position).should be_false
-  end 
+  end
 
   it "determines if it is attacked by something else" do
     king_position = make_square(4, 7)

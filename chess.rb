@@ -182,7 +182,7 @@ class Pawn < Piece
   end
 
   def any_moves?(from)
-    positions = [[from.x + 1, from.y - 1], [from.x, from.y - 1], 
+    positions = [[from.x + 1, from.y - 1], [from.x, from.y - 1],
                  [from.x - 1, from.y - 1], [from.x, from.y + 1],
                  [from.x + 1, from.y + 1], [from.x - 1, from.y + 1]]
     positions.any? do |position|
@@ -219,7 +219,7 @@ class King < Piece
       square = Square.new square.x + dx, square.y
       safe_from? square
     end
-  end 
+  end
 
   def valid_move?(from, to)
     return false if from.delta_y(to) > 1
@@ -229,7 +229,7 @@ class King < Piece
         return false unless castle? from, rook_position
       elsif to.x == from.x - 2 and from.y == to.y
         rook_position = Square.new 0, from.y
-        return false unless castle? from, rook_position 
+        return false unless castle? from, rook_position
       else
         return false
       end
@@ -263,7 +263,7 @@ class King < Piece
       @board.piece_on(square).is_a? Knight and @board.piece_on(square).color != color
     end
   end
-  
+
   def attacked_by_other?(position)
     directions = [[1, 0], [-1, 0], [0, 1], [0, -1],
                   [1, 1], [-1, 1], [1, -1], [-1, -1]]

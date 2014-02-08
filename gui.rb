@@ -123,7 +123,7 @@ def game(board)
     square = get_square_at [left, top]
     unless square.out_of_the_board?
       if first_selection
-        board.make_a_move first_selection, square       
+        board.make_a_move first_selection, square
         check_for_winner board
         first_selection = EMPTY
         draw_board

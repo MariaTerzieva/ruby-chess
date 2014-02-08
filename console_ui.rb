@@ -65,7 +65,7 @@ class ConsoleUI
     puts "Type 'save' to save the game."
     puts "Type 'load' to load a game."
     print "> "
-  end   
+  end
 
   def play
     system "clear"
