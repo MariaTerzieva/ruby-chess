@@ -16,6 +16,7 @@ If you want to run the tests, you'll have to install `rspec` and `bundler`. It i
 run the following command in terminal:
 
 `gem install rspec`
+
 `gem install bundler`
 
 If you want to play the game with the GUI, you'll have to install `green_shoes`:
