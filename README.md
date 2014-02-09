@@ -82,3 +82,17 @@ License
 -------
 
 Released under the MIT License.
+
+TODO/Refractor
+--------------
+
+- Make the GUI and the console interface more user friendly
+- Add methods `up`, `left`, `right`, `down` to Square
+- Use squares for keys in the board
+- Separate board and pieces logic as much as possible
+- Instead of checking if a move is valid, find all valid moves
+- Add `green_shoes` to the Gemfile
+- Implement en passant and pawn promotion
+- Split `spec.rb` into smaller specs
+- Not to repeat myself in different functions
+- Avoid "global" functions
