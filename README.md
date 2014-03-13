@@ -9,19 +9,9 @@ Chess game written in Ruby
 Requirements
 ------------
 
-You should have Ruby 2.1.0 properly installed. I guess it might work with
+You should have Ruby 2.1.0 and the `bundler` gem installed. I guess it might work with
 older versions of Ruby so you can try that out but I can't guarantee anything.
 
-If you want to run the tests, you'll have to install `rspec` and `bundler`. It is easy. Just
-run the following command in terminal:
-
-`gem install rspec`
-
-`gem install bundler`
-
-If you want to play the game with the GUI, you'll have to install `green_shoes`:
-
-`gem install green_shoes`
 
 Installation
 ------------
@@ -91,7 +81,6 @@ TODO/Refractor
 - Use squares for keys in the board
 - Separate board and pieces logic as much as possible
 - Instead of checking if a move is valid, find all valid moves
-- Add `green_shoes` to the Gemfile
 - Implement en passant and pawn promotion
 - Split `spec.rb` into smaller specs
 - Not to repeat myself in different functions
